@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         tvSpace = (TextView) findViewById(R.id.tvSpace);
         btnStatistical = (Button) findViewById(R.id.btnThongke);
         tvAddress = (TextView) findViewById(R.id.tvAddress);
-        lv = (ListView) findViewById(R.id.cars_list2);
+        lv = (ListView) findViewById(R.id.cars_list);
         btnStatistical.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
