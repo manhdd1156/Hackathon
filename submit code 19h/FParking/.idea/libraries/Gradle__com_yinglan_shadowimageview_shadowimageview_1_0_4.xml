@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.yinglan.shadowimageview:shadowimageview-1.0.4">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/shadowimageview-1.0.4.aar/88ec608b063a92a525d4f9410cffd252/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/shadowimageview-1.0.4.aar/88ec608b063a92a525d4f9410cffd252/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.yinglan.shadowimageview/shadowimageview/1.0.4/8fce33810aa813e214cef2f9ff3ef590720045f2/shadowimageview-1.0.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
