@@ -1,11 +1,14 @@
 package com.example.hung.fparking;
 
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +26,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import Service.Constants;
 import Service.HttpHandler;
 
 public class OrderParking extends AppCompatActivity {
@@ -64,8 +68,7 @@ public class OrderParking extends AppCompatActivity {
                 sharedPreferenceEditor.putString("parkingLng", parkinglongitude + "");
                 sharedPreferenceEditor.commit();
 
-                Intent intentNextDirection = new Intent(OrderParking.this, Direction.class);
-                startActivity(intentNextDirection);
+                new pushToOwner("2","order").execute((Void)null);
             }
         });
 
@@ -135,6 +138,60 @@ public class OrderParking extends AppCompatActivity {
             textViewPrice.setText(price + "");
             textViewTime.setText(time);
             textViewAddress.setText(address);
+        }
+
+    }
+
+    class pushToOwner extends AsyncTask<Void, Void, Boolean> {
+        ProgressDialog pdLoading;
+        boolean success = false;
+        String action,carID;
+        public pushToOwner(String carID, String action) {
+            this.action = action;
+            this.carID = carID;
+            pdLoading = new ProgressDialog(OrderParking.this);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //this method will be running on UI thread
+            pdLoading.setMessage("\tĐợi xíu...");
+            pdLoading.setCancelable(false);
+            pdLoading.show();
+
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            HttpHandler httpHandler = new HttpHandler();
+            try {
+                JSONObject formData = new JSONObject();
+                formData.put("carID", carID);
+                formData.put("action", action);
+                String json = httpHandler.post(Constants.API_URL + "driver/booking.php", formData.toString());
+                JSONObject jsonObj = new JSONObject(json);
+                if (jsonObj.getInt("size") > 0) {
+                    success = true;
+                }
+
+            } catch (Exception ex) {
+                Log.e("Error:", ex.getMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if(aBoolean==null) {
+                pdLoading.dismiss();
+                onResume();
+            }else {
+                pdLoading.dismiss();
+            }
         }
 
     }

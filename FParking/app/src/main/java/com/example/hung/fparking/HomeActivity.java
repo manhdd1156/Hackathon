@@ -169,16 +169,16 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onCameraMoveStarted(int i) {
-
-//        LatLng cameraLatLng = ;
-//        String[] locaton = getLat_lng(cameraLatLng.toString());
-
-        selectPlaceLat = mMap.getCameraPosition().target.latitude;
-        Log.e("Camera LatLog", searchPlaceLat + "");
-        check = 1;
-//        selectPlaceLat = Double.parseDouble(locaton[0]);
-//        selectPlaceLng = Double.parseDouble(locaton[1]);
-        new GetNearPlace().execute();
+//
+////        LatLng cameraLatLng = ;
+////        String[] locaton = getLat_lng(cameraLatLng.toString());
+//
+//        selectPlaceLat = mMap.getCameraPosition().target.latitude;
+//        Log.e("Camera LatLog", searchPlaceLat + "");
+//        check = 1;
+////        selectPlaceLat = Double.parseDouble(locaton[0]);
+////        selectPlaceLng = Double.parseDouble(locaton[1]);
+//        new GetNearPlace().execute();
 
     }
 
