@@ -76,7 +76,7 @@
         android:textSize="15sp" />
 
     <ListView
-        android:id="@+id/cars_list"
+        android:id="@+id/cars_list2"
         android:layout_width="300dp"
         android:layout_height="285dp"
         android:layout_alignTop="@+id/imgInfor1"
