@@ -1100,7 +1100,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void statisticalOnclick(View view) {
+<<<<<<< HEAD
 
+=======
+        Intent intent = new Intent(MainActivity.this,Statistical.class);
+        this.startActivity(intent);
+>>>>>>> ea2a5502cc60bd55be0db3b18471660b6c958f72
     }
 
 }

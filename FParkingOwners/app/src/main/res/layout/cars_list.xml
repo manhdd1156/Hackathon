@@ -59,7 +59,7 @@
         <Button
             android:id="@+id/btnAccept"
             android:layout_width="72dp"
-            android:layout_height="31dp"
+            android:layout_height="32dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="9dp"
             android:layout_toEndOf="@+id/tvTypeCar"
@@ -71,11 +71,11 @@
         <Button
             android:id="@+id/btnCancel"
             android:layout_width="73dp"
-            android:layout_height="30dp"
+            android:layout_height="32dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="9dp"
             android:layout_toEndOf="@+id/btnAccept"
-            android:background="@drawable/button_selector"
+            android:background="@drawable/button_cancel"
             android:text="HỦY"
             android:textColor="#FFFFFF"
             android:textSize="8sp" />

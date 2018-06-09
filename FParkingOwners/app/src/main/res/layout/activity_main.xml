@@ -156,7 +156,7 @@
         <Button
             android:id="@+id/btnChange"
             android:layout_width="54dp"
-            android:layout_height="23dp"
+            android:layout_height="25dp"
             android:layout_below="@+id/textView3"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="7dp"
@@ -170,8 +170,9 @@
         <Button
             android:id="@+id/btnThongke"
             android:layout_width="54dp"
-            android:layout_height="23dp"
+            android:layout_height="25dp"
             android:layout_alignTop="@+id/textView4"
+            android:layout_marginTop="-1dp"
             android:layout_toEndOf="@+id/tvAddress"
             android:background="@drawable/button_selector"
             android:text="THỐNG KÊ"
