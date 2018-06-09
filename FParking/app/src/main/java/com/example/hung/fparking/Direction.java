@@ -87,13 +87,18 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
 
         sharedPreferences = getSharedPreferences("driver", 0);
         sharedPreferenceEditor = sharedPreferences.edit();
+        String bookID = sharedPreferences.getString("bookingID", "");
+        String action = sharedPreferences.getString("action", "");
 
         buttonCheckin = (Button) findViewById(R.id.buttonCheckin);
+
         buttonCheckin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                new pushToOwner("2","checkin", sharedPreferences.getString("bookingID","")).execute((Void)null);
+                    new pushToOwner("2", "checkin", sharedPreferences.getString("bookingID", "")).execute((Void) null);
+
+
 
             }
         });
@@ -143,7 +148,6 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         String directionLng = sharedPreferences.getString("parkingLng", "");
 
         Log.e("TOA DO DIEM DEN: ", directionLat + "---" + directionLng);
-//        Log.e("directionLat in Dirction", "" + directionLat);
 
         String ori = directionLat + "," + directionLng;
         try {
@@ -269,8 +273,8 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         }
 
         Location distination = new Location("distination");
-        distination.setLatitude(location.getLatitude());
-        distination.setLongitude(location.getLongitude());
+        distination.setLatitude(Double.parseDouble(sharedPreferences.getString("parkingLat","")));
+        distination.setLongitude(Double.parseDouble(sharedPreferences.getString("parkingLng","")));
         double distanceValue = distination.distanceTo(location);
         if (distanceValue <= 15) {
 //            Log.e("Check in:", "ok");
@@ -362,7 +366,8 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
     class pushToOwner extends AsyncTask<Void, Void, Boolean> {
         ProgressDialog pdLoading;
         boolean success = false;
-        String action,carID, bookingID;
+        String action, carID, bookingID;
+
         public pushToOwner(String carID, String action, String bookingID) {
             this.action = action;
             this.carID = carID;
@@ -405,10 +410,10 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            if(aBoolean==null) {
+            if (aBoolean == null) {
                 pdLoading.dismiss();
                 onResume();
-            }else {
+            } else {
                 pdLoading.dismiss();
             }
         }

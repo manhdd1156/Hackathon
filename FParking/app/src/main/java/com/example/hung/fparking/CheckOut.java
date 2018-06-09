@@ -22,7 +22,7 @@ import Service.HttpHandler;
 
 public class CheckOut extends AppCompatActivity {
 
-    TextView textViewAddress, textViewCheckIn, textViewPrice, textViewLicensePlate;
+    TextView textViewAddress, textViewCheckIn, textViewPrice, textViewLicensePlate, textViewTotalPrice;
 
     double selectPlaceLat = 0;
     double selectPlaceLng = 0;
@@ -51,18 +51,41 @@ public class CheckOut extends AppCompatActivity {
         textViewCheckIn = findViewById(R.id.textViewCheckinTime);
         textViewPrice = findViewById(R.id.textViewPrice);
         textViewLicensePlate = findViewById(R.id.textViewLicensePlate);
+        textViewTotalPrice = findViewById(R.id.textViewTotalPrice);
         buttonCheckOut = findViewById(R.id.buttonCheckout);
+
+        final String bookingID = sharedPreferences.getString("bookingID", "");
+
+        if (sharedPreferences.getString("action", "").equals("3")) {
+            buttonCheckOut.setText("THANH TOÁN XONG");
+            new GetCheckOutInfor(bookingID).execute();
+            textViewTotalPrice.setText(sharedPreferences.getString("totalPrice", ""));
+        } else {
+            buttonCheckOut.setText("THANH TOÁN");
+        }
+
         buttonCheckOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new pushToOwner("2","checkout", sharedPreferences.getString("bookingID","")).execute((Void)null);
+                if (buttonCheckOut.getText().equals("THANH TOÁN")) {
+                    new pushToOwner("2", "checkout", bookingID).execute((Void) null);
+                } else {
+                    sharedPreferenceEditor.clear().commit();
+                    Intent intent = new Intent(CheckOut.this, HomeActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
-        new GetCheckOutInfor().execute();
+        new GetCheckOutInfor(bookingID).execute();
     }
 
     public class GetCheckOutInfor extends AsyncTask<Void, Void, Void> {
+        private String bookingID;
+
+        public GetCheckOutInfor(String bookingID) {
+            this.bookingID = bookingID;
+        }
 
         @Override
         protected Void doInBackground(Void... voids) {
@@ -76,7 +99,7 @@ public class CheckOut extends AppCompatActivity {
 //            selectPlaceLng = Double.parseDouble(getParkingLocation[1]);
 
 //            Log.e("GetNearPlace:", "O day");
-            strJSON = httpHandler.getrequiement("https://fparking.net/realtimeTest/driver/get_CheckOut_Detail.php?bookingID=143");
+            strJSON = httpHandler.getrequiement("https://fparking.net/realtimeTest/driver/get_CheckOut_Detail.php?bookingID=" + bookingID);
 //            Log.e("SQL Detail:", strJSON.toString());
 
             if (strJSON != null) {
@@ -113,10 +136,11 @@ public class CheckOut extends AppCompatActivity {
 
             textViewAddress.setText(address);
             textViewCheckIn.setText(timeCheckIN);
-            textViewPrice.setText(price+"");
+            textViewPrice.setText(price + "");
             textViewLicensePlate.setText(licensePlate);
         }
     }
+
     public String[] getLat_lng(String location) {
         String[] latlng = location.substring(location.indexOf("(") + 1, location.indexOf(")")).split(",");
         return latlng;
@@ -125,7 +149,8 @@ public class CheckOut extends AppCompatActivity {
     class pushToOwner extends AsyncTask<Void, Void, Boolean> {
         ProgressDialog pdLoading;
         boolean success = false;
-        String action,carID, bookingID;
+        String action, carID, bookingID;
+
         public pushToOwner(String carID, String action, String bookingID) {
             this.action = action;
             this.carID = carID;
@@ -168,10 +193,10 @@ public class CheckOut extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            if(aBoolean==null) {
+            if (aBoolean == null) {
                 pdLoading.dismiss();
                 onResume();
-            }else {
+            } else {
                 pdLoading.dismiss();
             }
         }

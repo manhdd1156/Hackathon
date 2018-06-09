@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.pusher.client.Pusher;
 import com.pusher.client.PusherOptions;
@@ -30,10 +31,11 @@ public class LoadFirstTime extends AppCompatActivity {
         setContentView(R.layout.activity_load_first_time);
         getSupportActionBar().hide();
 
-        sharedPreferences = getSharedPreferences("dirver", 0);
+        sharedPreferences = getSharedPreferences("driver", 0);
         int parkingID = 0;
         sharedPreferencesEditor = sharedPreferences.edit();
         sharedPreferencesEditor.clear().commit();
+        Log.e("Cái này chạy kinh qua","aaaaaaaaaa");
         sharedPreferencesEditor.putInt("parkingID", parkingID);
         sharedPreferencesEditor.commit();
 //        GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
@@ -111,10 +113,6 @@ public class LoadFirstTime extends AppCompatActivity {
         try {
             final String carID = json.getString("carID");
 
-//            final String message = json.getString("message");
-//
-//            sharedPreferencesEditor.putString("carID",carID);
-            sharedPreferencesEditor.commit();
             if (carID.equals("2")) {
                 final String message = json.getString("message");
                 if (message.equals("OK")) {

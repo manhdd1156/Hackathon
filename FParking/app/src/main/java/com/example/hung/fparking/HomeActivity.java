@@ -69,7 +69,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        sharedPreferences = getSharedPreferences("dirver", 0);
+        sharedPreferences = getSharedPreferences("driver", 0);
         searchPlace();
 
 
@@ -180,21 +180,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onCameraMoveStarted(int i) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-//
-////        LatLng cameraLatLng = ;
-////        String[] locaton = getLat_lng(cameraLatLng.toString());
-//
-//        selectPlaceLat = mMap.getCameraPosition().target.latitude;
-//        Log.e("Camera LatLog", searchPlaceLat + "");
-//        check = 1;
-////        selectPlaceLat = Double.parseDouble(locaton[0]);
-////        selectPlaceLng = Double.parseDouble(locaton[1]);
-//        new GetNearPlace().execute();
-=======
-=======
->>>>>>> ace18d562b6984b9d84a40409f4865ba7f01cf8d
+
         mMap.clear();
         check = 1;
         LatLng cameraLatLng = mMap.getCameraPosition().target;
@@ -202,7 +188,6 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         searchPlaceLng = Double.parseDouble(locaton[0]);
         searchPlaceLng = Double.parseDouble(locaton[1]);
         new GetNearPlace().execute();
->>>>>>> ace18d562b6984b9d84a40409f4865ba7f01cf8d
 
     }
 
