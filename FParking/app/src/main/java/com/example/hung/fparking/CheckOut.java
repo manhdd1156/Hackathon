@@ -1,16 +1,23 @@
 package com.example.hung.fparking;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import Service.Constants;
 import Service.HttpHandler;
 
 public class CheckOut extends AppCompatActivity {
@@ -27,16 +34,30 @@ public class CheckOut extends AppCompatActivity {
     String timeCheckIN = "N/A";
     String licensePlate = "N/A";
 
+    Button buttonCheckOut;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor sharedPreferenceEditor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_out);
         getSupportActionBar().hide();
 
+        sharedPreferences = getSharedPreferences("driver", 0);
+        sharedPreferenceEditor = sharedPreferences.edit();
+
         textViewAddress = findViewById(R.id.textViewAddress);
         textViewCheckIn = findViewById(R.id.textViewCheckinTime);
         textViewPrice = findViewById(R.id.textViewPrice);
         textViewLicensePlate = findViewById(R.id.textViewLicensePlate);
+        buttonCheckOut = findViewById(R.id.buttonCheckout);
+        buttonCheckOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new pushToOwner("2","checkout", sharedPreferences.getString("bookingID","")).execute((Void)null);
+            }
+        });
 
         new GetCheckOutInfor().execute();
     }
@@ -99,5 +120,61 @@ public class CheckOut extends AppCompatActivity {
     public String[] getLat_lng(String location) {
         String[] latlng = location.substring(location.indexOf("(") + 1, location.indexOf(")")).split(",");
         return latlng;
+    }
+
+    class pushToOwner extends AsyncTask<Void, Void, Boolean> {
+        ProgressDialog pdLoading;
+        boolean success = false;
+        String action,carID, bookingID;
+        public pushToOwner(String carID, String action, String bookingID) {
+            this.action = action;
+            this.carID = carID;
+            this.bookingID = bookingID;
+            pdLoading = new ProgressDialog(CheckOut.this);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //this method will be running on UI thread
+            pdLoading.setMessage("\tĐợi xíu...");
+            pdLoading.setCancelable(false);
+            pdLoading.show();
+
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            HttpHandler httpHandler = new HttpHandler();
+            try {
+                JSONObject formData = new JSONObject();
+                formData.put("carID", carID);
+                formData.put("bookingID", bookingID);
+                formData.put("action", action);
+                String json = httpHandler.post(Constants.API_URL + "driver/booking.php", formData.toString());
+                JSONObject jsonObj = new JSONObject(json);
+                if (jsonObj.getInt("size") > 0) {
+                    success = true;
+                }
+
+            } catch (Exception ex) {
+                Log.e("Error:", ex.getMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if(aBoolean==null) {
+                pdLoading.dismiss();
+                onResume();
+            }else {
+                pdLoading.dismiss();
+            }
+        }
+
     }
 }

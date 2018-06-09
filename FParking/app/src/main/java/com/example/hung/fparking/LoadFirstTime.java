@@ -20,7 +20,7 @@ import Service.Constants;
 
 
 public class LoadFirstTime extends AppCompatActivity {
-    private static int SPLASH_TIME_OUT = 5000;
+    private static int SPLASH_TIME_OUT = 3000;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor sharedPreferencesEditor;
 
@@ -33,6 +33,7 @@ public class LoadFirstTime extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("dirver", 0);
         int parkingID = 0;
         sharedPreferencesEditor = sharedPreferences.edit();
+        sharedPreferencesEditor.clear().commit();
         sharedPreferencesEditor.putInt("parkingID", parkingID);
         sharedPreferencesEditor.commit();
 //        GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
@@ -52,7 +53,7 @@ public class LoadFirstTime extends AppCompatActivity {
 
         Channel channel = pusher.subscribe(Constants.PUSHER_CHANNEL);
 
-        channel.bind("ORDER_FOR_OWNER", new SubscriptionEventListener() {
+        channel.bind("ORDER_FOR_BOOKING", new SubscriptionEventListener() {
             @Override
             public void onEvent(String channelName, String eventName, final String data) {
 
@@ -67,7 +68,7 @@ public class LoadFirstTime extends AppCompatActivity {
 //                createNotification();
             }
         });
-        channel.bind("CHECKIN_FOR_OWNER", new SubscriptionEventListener() {
+        channel.bind("CHECKIN_FOR_BOOKING", new SubscriptionEventListener() {
             @Override
             public void onEvent(String channelName, String eventName, final String data) {
 
@@ -83,7 +84,7 @@ public class LoadFirstTime extends AppCompatActivity {
 
             }
         });
-        channel.bind("CHECKOUT_FOR_OWNER", new SubscriptionEventListener() {
+        channel.bind("CHECKOUT_FOR_BOOKING", new SubscriptionEventListener() {
             @Override
             public void onEvent(String channelName, String eventName, final String data) {
 
@@ -110,19 +111,60 @@ public class LoadFirstTime extends AppCompatActivity {
         try {
             final String carID = json.getString("carID");
 
-            sharedPreferencesEditor.putInt("carID", Integer.parseInt(carID));
+//            final String message = json.getString("message");
+//
+//            sharedPreferencesEditor.putString("carID",carID);
             sharedPreferencesEditor.commit();
+            if (carID.equals("2")) {
+                final String message = json.getString("message");
+                if (message.equals("OK")) {
+                    if (action.equals("order")) { // người dùng order => insert booking với status = 1
+                        final String bookingID = json.getString("bookingID");
+                        final String stt = json.getString("action");
 
-            if (action.equals("order")) { // người dùng order => insert booking với status = 1
-//                new SearchBookingTask("carID=" + carID, "order").execute((Void) null);
-//                        final BookingDTO b = new BookingDTO(0, Integer.parseInt(parkingID), Integer.parseInt(carID), "1", "", "", "", "", Double.parseDouble("0"));
-            } else if (action.equals("checkin")) {
-                final String bookingID = json.getString("bookingID");
-//                new SearchBookingTask("bookingID=" + bookingID, "checkin").execute((Void) null);
+                        sharedPreferencesEditor.putString("carID", carID);
+                        sharedPreferencesEditor.putString("bookingID", bookingID);
+                        sharedPreferencesEditor.putString("action", stt);
+                        sharedPreferencesEditor.commit();
+                        Intent intent = new Intent(LoadFirstTime.this, Direction.class);
+                        startActivity(intent);
+                    } else if (action.equals("checkin")) {
+                        final String bookingID = json.getString("bookingID");
+                        if (bookingID.equals(sharedPreferences.getString("bookingID", ""))) {
+                            final String stt = json.getString("action");
 
-            } else if (action.equals("checkout")) {
-                final String bookingID = json.getString("bookingID");
-//                new SearchBookingTask("bookingID=" + bookingID, "checkout").execute((Void) null);
+                            sharedPreferencesEditor.putString("action", stt);
+                            sharedPreferencesEditor.commit();
+                            Intent intent = new Intent(LoadFirstTime.this, CheckOut.class);
+                            startActivity(intent);
+                        }
+                    } else if (action.equals("checkout")) {
+                        final String bookingID = json.getString("bookingID");
+                        if (bookingID.equals(sharedPreferences.getString("bookingID", ""))) {
+                            final String stt = json.getString("action");
+                            final String licensePlate = json.getString("licensePlate");
+                            final String type = json.getString("type");
+                            final String checkinTime = json.getString("checkinTime");
+                            final String checkoutTime = json.getString("checkoutTime");
+                            final String price = json.getString("price");
+                            final String hours = json.getString("hours");
+                            final String totalPrice = json.getString("totalPrice");
+
+
+                            sharedPreferencesEditor.putString("action", stt);
+                            sharedPreferencesEditor.putString("licensePlate", licensePlate);
+                            sharedPreferencesEditor.putString("type", type);
+                            sharedPreferencesEditor.putString("checkinTime", checkinTime);
+                            sharedPreferencesEditor.putString("checkoutTime", checkoutTime);
+                            sharedPreferencesEditor.putString("price", price);
+                            sharedPreferencesEditor.putString("hours", hours);
+                            sharedPreferencesEditor.putString("totalPrice", totalPrice);
+                            sharedPreferencesEditor.commit();
+                            Intent intent = new Intent(LoadFirstTime.this, CheckOut.class);
+                            startActivity(intent);
+                        }
+                    }
+                }
             }
         } catch (JSONException e) {
             System.out.println("Json Exception: " + e.getMessage());

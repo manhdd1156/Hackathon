@@ -17,7 +17,9 @@ import android.location.LocationManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -41,6 +43,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +53,8 @@ import Model.DirectionFinder;
 import Model.DirectionFinderListener;
 import Entity.Route;
 import Model.GPSTracker;
+import Service.Constants;
+import Service.HttpHandler;
 
 public class Direction extends FragmentActivity implements OnMapReadyCallback, DirectionFinderListener, LocationListener, GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraMoveStartedListener {
 
@@ -78,12 +84,17 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
+        sharedPreferences = getSharedPreferences("driver", 0);
+        sharedPreferenceEditor = sharedPreferences.edit();
+
         buttonCheckin = (Button) findViewById(R.id.buttonCheckin);
         buttonCheckin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Direction.this, CheckOut.class);
-                startActivity(intent);
+
+                new pushToOwner("2","checkin", sharedPreferences.getString("bookingID","")).execute((Void)null);
+
             }
         });
 
@@ -101,6 +112,8 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
 
         // Gửi yêu cầu chỉ đường
         sendRequest();
+
+
     }
 
     private void callLocationChangedListener() {
@@ -343,6 +356,62 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
 
     @Override
     public void onCameraMove() {
+
+    }
+
+    class pushToOwner extends AsyncTask<Void, Void, Boolean> {
+        ProgressDialog pdLoading;
+        boolean success = false;
+        String action,carID, bookingID;
+        public pushToOwner(String carID, String action, String bookingID) {
+            this.action = action;
+            this.carID = carID;
+            this.bookingID = bookingID;
+            pdLoading = new ProgressDialog(Direction.this);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //this method will be running on UI thread
+            pdLoading.setMessage("\tĐợi xíu...");
+            pdLoading.setCancelable(false);
+            pdLoading.show();
+
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            HttpHandler httpHandler = new HttpHandler();
+            try {
+                JSONObject formData = new JSONObject();
+                formData.put("carID", carID);
+                formData.put("bookingID", bookingID);
+                formData.put("action", action);
+                String json = httpHandler.post(Constants.API_URL + "driver/booking.php", formData.toString());
+                JSONObject jsonObj = new JSONObject(json);
+                if (jsonObj.getInt("size") > 0) {
+                    success = true;
+                }
+
+            } catch (Exception ex) {
+                Log.e("Error:", ex.getMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if(aBoolean==null) {
+                pdLoading.dismiss();
+                onResume();
+            }else {
+                pdLoading.dismiss();
+            }
+        }
 
     }
 }
