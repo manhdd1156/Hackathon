@@ -95,7 +95,6 @@ public class CheckOut extends AppCompatActivity {
             textViewPrice.setText(price+"");
             textViewLicensePlate.setText(licensePlate);
         }
-
     }
     public String[] getLat_lng(String location) {
         String[] latlng = location.substring(location.indexOf("(") + 1, location.indexOf(")")).split(",");

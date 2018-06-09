@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -60,6 +61,8 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
     private ProgressDialog progressDialog;
     private LocationManager locationManager = null;
     Notification noti;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor sharedPreferenceEditor;
 
     Button buttonCheckin;
     View mMapView;
@@ -119,8 +122,13 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
 //            Toast.makeText(this, "Please enter destination address!", Toast.LENGTH_SHORT).show();
 //            return;
 //        }
+
+        sharedPreferences = getSharedPreferences("driver", 0);
         GPSTracker gps = new GPSTracker(this);
-        String ori = "21.013949,105.525713";
+        String directionLat = sharedPreferences.getString("parkingLat", "");
+        String directionLng = sharedPreferences.getString("parkingLng", "");
+
+        String ori = directionLat + "," + directionLng;
         try {
             new DirectionFinder(this, gps.getLatitude() + "," + gps.getLongitude(), "21.007423,105.792855").execute();
         } catch (UnsupportedEncodingException e) {
@@ -167,7 +175,7 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         GPSTracker gps = new GPSTracker(this);
         Location mLocation = gps.getLocation();
         mMap.addMarker(new MarkerOptions().position(new LatLng(mLocation.getLatitude(), mLocation.getLongitude())).title("Marker in Sydney"));
-       // Gọi listener OnCameraMoveStartedListener
+        // Gọi listener OnCameraMoveStartedListener
         mMap.setOnCameraMoveStartedListener(this);
         // Gọi listener LocationChanged
         callLocationChangedListener();
@@ -247,8 +255,8 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         distination.setLatitude(location.getLatitude());
         distination.setLongitude(location.getLongitude());
         double distanceValue = distination.distanceTo(location);
-        if(distanceValue<=15){
-            Log.e("Check in:","ok");
+        if (distanceValue <= 15) {
+            Log.e("Check in:", "ok");
             createNotification("Fparking");
         }
     }

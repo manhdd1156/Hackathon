@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CheckOut"
+    android:background="@color/background">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+
+        <ImageView
+            android:id="@+id/imageView9"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/header"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="14dp"
+            android:text="Thanh toán"
+            android:textColor="@color/whitetext"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="141dp"
+            tools:layout_editor_absoluteY="16dp" />
+
+        <ImageView
+            android:id="@+id/imageView13"
+            android:layout_width="match_parent"
+            android:layout_height="154dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="85dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/checkoutinfo" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="151dp"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView17"
+            android:layout_alignTop="@+id/imageView13"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/ic_action_info"
+            android:gravity="center_vertical"
+            android:text="Thông tin đỗ xe"
+            android:textColor="@color/white_greyish"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/imageView15"
+            android:layout_marginStart="50dp"
+            android:drawableLeft="@drawable/ic_action_address"
+            android:gravity="center_vertical"
+            android:text="N/A"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/textViewCheckinTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textViewAddress"
+            android:layout_below="@+id/textViewAddress"
+            android:drawableLeft="@drawable/ic_action_timeoc"
+            android:gravity="center_vertical"
+            android:text="N/A"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/textViewPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textViewAddress"
+            android:layout_below="@+id/textViewCheckinTime"
+            android:drawableLeft="@drawable/ic_action_coin"
+            android:gravity="center_vertical"
+            android:text="N/A"
+            android:textSize="13sp" />
+
+        <ImageView
+            android:id="@+id/imageView15"
+            android:layout_width="307dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView5"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-7dp"
+            app:srcCompat="@drawable/line" />
+
+        <ImageView
+            android:id="@+id/imageView16"
+            android:layout_width="match_parent"
+            android:layout_height="108dp"
+            android:layout_below="@+id/imageView13"
+            android:layout_marginTop="8dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/checkoutinfo" />
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="151dp"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/imageView15"
+            android:layout_below="@+id/imageView13"
+            android:layout_marginTop="14dp"
+            android:drawableLeft="@drawable/ic_action_info"
+            android:gravity="center_vertical"
+            android:text="Thành tiền"
+            android:textColor="@color/white_greyish"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imageView17"
+            android:layout_width="307dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textView17"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="-10dp"
+            app:srcCompat="@drawable/line" />
+
+        <TextView
+            android:id="@+id/textViewTotalPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imageView17"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp"
+            android:gravity="center_vertical"
+            android:text="Chưa thanh toán"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imageView18"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_below="@+id/imageView16"
+            android:layout_marginTop="8dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/checkoutinfo" />
+
+        <ImageView
+            android:id="@+id/imageView12"
+            android:layout_width="67dp"
+            android:layout_height="54dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/imageView16"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/ic_action_car" />
+
+        <TextView
+            android:id="@+id/textViewLicensePlate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imageView18"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:text="N/A"
+            android:textColor="@color/white_greyish"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/buttonCheckout"
+            android:layout_width="276dp"
+            android:layout_height="52dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="66dp"
+            android:background="@drawable/button_selector"
+            android:text="THANH TOÁN"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>
