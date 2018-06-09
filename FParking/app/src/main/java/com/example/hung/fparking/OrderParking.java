@@ -65,17 +65,25 @@ public class OrderParking extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("driver", 0);
         sharedPreferenceEditor = sharedPreferences.edit();
 
+        final String bookID = sharedPreferences.getString("bookingID", "");
+
+        if (!bookID.equals("") && !sharedPreferences.getString("parkingLat", "").equals("")) {
+            buttonDat_Cho.setText("CHỈ ĐƯỜNG");
+        }
         buttonDat_Cho.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String bookID = sharedPreferences.getString("bookingID","");
+
                 if (bookID.equals("")) {
                     sharedPreferenceEditor.putString("parkingLat", parkingLatitde + "");
                     sharedPreferenceEditor.putString("parkingLng", parkinglongitude + "");
                     sharedPreferenceEditor.commit();
-
                     new pushToOwner("2", "order").execute((Void) null);
-                }else {
+                } else if (!bookID.equals("") && !sharedPreferences.getString("parkingLat", "").equals("")) {
+                    buttonDat_Cho.setText("CHỈ ĐƯỜNG");
+                    Intent intent = new Intent(OrderParking.this, Direction.class);
+                    startActivity(intent);
+                } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(OrderParking.this);
                     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                         @Override
@@ -115,12 +123,16 @@ public class OrderParking extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
 
             HttpHandler httpHandler = new HttpHandler();
-
             Intent intentGetParkingLocation = getIntent();
-            String[] getParkingLocation = getLat_lng(intentGetParkingLocation.getStringExtra("ParkingLocation"));
+            if (intentGetParkingLocation.getStringExtra("ParkingLocation").equals("") || intentGetParkingLocation.getStringExtra("ParkingLocation").isEmpty()) {
+                selectPlaceLat = Double.parseDouble(sharedPreferences.getString("parkingLat", ""));
+                selectPlaceLng = Double.parseDouble(sharedPreferences.getString("parkingLng", ""));
+            } else {
+                String[] getParkingLocation = getLat_lng(intentGetParkingLocation.getStringExtra("ParkingLocation"));
+                selectPlaceLat = Double.parseDouble(getParkingLocation[0]);
+                selectPlaceLng = Double.parseDouble(getParkingLocation[1]);
+            }
 
-            selectPlaceLat = Double.parseDouble(getParkingLocation[0]);
-            selectPlaceLng = Double.parseDouble(getParkingLocation[1]);
 
             Log.e("GetNearPlace:", "O day");
             strJSON = httpHandler.getrequiement("https://fparking.net/realtimeTest/driver/get_Detail_Parking.php?latitude=" + selectPlaceLat + "&" + "longitude=" + selectPlaceLng);

@@ -3,6 +3,7 @@ package com.example.hung.fparking;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -72,8 +73,8 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         sharedPreferences = getSharedPreferences("driver", 0);
+        sharedPreferencesEditor = sharedPreferences.edit();
         searchPlace();
-
 
         mMapView = mapFragment.getView();
         View locationButton = ((View) mMapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
@@ -101,15 +102,47 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-
-                if (sharedPreferences.getInt("parkingID", 0) == 0) {
-                    String parkingLocation = marker.getPosition().toString();
+                String parkingLocation = marker.getPosition().toString();
+                String[] latlng = getLat_lng(parkingLocation);
+                String lat =latlng[0];
+                String lng =latlng[1];
+                if (sharedPreferences.getString("bookingID", "").equals("")) {
                     Intent intentOrderFlagment = new Intent(HomeActivity.this, OrderParking.class);
                     intentOrderFlagment.putExtra("ParkingLocation", parkingLocation);
                     startActivity(intentOrderFlagment);
+                } else if (sharedPreferences.getString("parkingLat", "").equals(lat)&&sharedPreferences.getString("parkingLng", "").equals(lng)) {
+                    if (sharedPreferences.getString("action","").equals("2")){
+                        Intent intentOrderFlagment = new Intent(HomeActivity.this, CheckOut.class);
+                        intentOrderFlagment.putExtra("ParkingLocation", parkingLocation);
+                        startActivity(intentOrderFlagment);
+                    }else {
+                        Intent intentOrderFlagment = new Intent(HomeActivity.this, OrderParking.class);
+                        intentOrderFlagment.putExtra("ParkingLocation", parkingLocation);
+                        startActivity(intentOrderFlagment);
+                    }
+
                 } else {
-                    AlertDialog.Builder builderCaution = new AlertDialog.Builder(HomeActivity.this);
-                    builderCaution.setMessage("Bạn đang đỗ xe nơi khác. Vui lòng thanh toán trước khi đặt bãi đỗ xe mới").show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int choice) {
+                            switch (choice) {
+                                case DialogInterface.BUTTON_POSITIVE:
+
+
+                                    break;
+                                case DialogInterface.BUTTON_NEGATIVE:
+
+                                    break;
+                            }
+                        }
+                    };
+                    try {
+                        builder.setMessage("Bạn đang đặt chỗ tại bãi xe: ")
+                                .setPositiveButton("Có", dialogClickListener).setCancelable(false).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 return false;
             }
@@ -210,7 +243,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
         if (!userAction) {
             mMap.clear();
-//        check = 1;
+            check = 1;
             searchPlaceLat = location.getLatitude();
             searchPlaceLng = location.getLongitude();
 

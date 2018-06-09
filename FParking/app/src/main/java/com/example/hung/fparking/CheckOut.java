@@ -209,4 +209,13 @@ public class CheckOut extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        if(sharedPreferences.getString("action","").equals("3")){
+            sharedPreferenceEditor.clear().commit();
+        }
+    }
 }

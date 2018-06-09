@@ -32,11 +32,11 @@ public class LoadFirstTime extends AppCompatActivity {
         getSupportActionBar().hide();
 
         sharedPreferences = getSharedPreferences("driver", 0);
-        int parkingID = 0;
+//        int parkingID = 0;
         sharedPreferencesEditor = sharedPreferences.edit();
         sharedPreferencesEditor.clear().commit();
         Log.e("Cái này chạy kinh qua","aaaaaaaaaa");
-        sharedPreferencesEditor.putInt("parkingID", parkingID);
+//        sharedPreferencesEditor.putInt("parkingID", parkingID);
         sharedPreferencesEditor.commit();
 //        GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
 //

@@ -48,12 +48,18 @@
 
         <activity
             android:name=".HomeActivity"
-            android:label="@string/title_activity_home" />
-        <activity android:name=".CheckOut" />
-        <activity android:name=".OrderParking" />
+            android:label="@string/title_activity_home"
+            />
+        <activity
+            android:name=".CheckOut"
+            android:noHistory="true" />
+        <activity
+            android:name=".OrderParking"
+            android:noHistory="true" />
         <activity
             android:name=".Direction"
-            android:label="@string/title_activity_direction">
+            android:label="@string/title_activity_direction"
+            android:noHistory="true">
 
         </activity>
 
