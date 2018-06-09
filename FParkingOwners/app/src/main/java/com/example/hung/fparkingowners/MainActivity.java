@@ -1059,7 +1059,7 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
     }
     public void statisticalOnclick(View view) {
-        Intent intent = new Intent(MainActivity.this,StatisticalActivity.class);
+        Intent intent = new Intent(MainActivity.this,Statistical.class);
         this.startActivity(intent);
     }
 
