@@ -54,16 +54,16 @@ public class CheckOut extends AppCompatActivity {
 //            selectPlaceLat = Double.parseDouble(getParkingLocation[0]);
 //            selectPlaceLng = Double.parseDouble(getParkingLocation[1]);
 
-            Log.e("GetNearPlace:", "O day");
+//            Log.e("GetNearPlace:", "O day");
             strJSON = httpHandler.getrequiement("https://fparking.net/realtimeTest/driver/get_CheckOut_Detail.php?bookingID=143");
-            Log.e("SQL Detail:", strJSON.toString());
+//            Log.e("SQL Detail:", strJSON.toString());
 
             if (strJSON != null) {
 
                 try {
                     JSONObject jsonObject = new JSONObject(strJSON);
 
-                    JSONArray jsonArrayParking = jsonObject.getJSONArray("detail_parking");
+                    JSONArray jsonArrayParking = jsonObject.getJSONArray("checkout_detail");
 
                     for (int i = 0; i < jsonArrayParking.length(); i++) {
                         JSONObject c = jsonArrayParking.getJSONObject(i);

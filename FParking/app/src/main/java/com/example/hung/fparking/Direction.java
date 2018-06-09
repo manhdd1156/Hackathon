@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +62,7 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
     Notification noti;
 
     Button buttonCheckin;
+    View mMapView;
     private boolean userGesture = false;
 
     CameraPosition cameraPosition;
@@ -82,13 +84,24 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
                 startActivity(intent);
             }
         });
+
+
+        mMapView = mapFragment.getView();
+        View locationButton = ((View) mMapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+// position on right bottom
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
+        rlp.setMargins(0, 1000, 0, 0);
+
+        // Gọi Listener Changed Location
         callLocationChangedListener();
 //        sendRequest();
     }
 
     private void callLocationChangedListener() {
         try {
-            locationManager = (LocationManager) getApplication().getSystemService(Context.LOCATION_SERVICE);
+            locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, this);
         } catch (Exception e) {
             e.printStackTrace();
