@@ -132,10 +132,9 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
 
         Log.e("TOA DO DIEM DEN: ", directionLat + "---" + directionLng);
 //        Log.e("directionLat in Dirction", "" + directionLat);
->>>>>>> 88305cfe7332a2cbba71907b6bd57f8e5ef76d0c
+
         String ori = directionLat + "," + directionLng;
         try {
-            new DirectionFinder(this, gps.getLatitude() + "," + gps.getLongitude(), directionLat+","+directionLng).execute();
             new DirectionFinder(this, gps.getLatitude() + "," + gps.getLongitude(), directionLat + "," + directionLng).execute();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
