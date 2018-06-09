@@ -147,6 +147,7 @@ public class OrderParking extends AppCompatActivity {
                 AlertDialog.Builder builderCaution = new AlertDialog.Builder(OrderParking.this);
                 builderCaution.setMessage("Bãi xe hết chỗ. Vui lòng chọn bãi đỗ khác!").show();
             }
+<<<<<<< HEAD
         }
 
     }
@@ -201,6 +202,8 @@ public class OrderParking extends AppCompatActivity {
             }else {
                 pdLoading.dismiss();
             }
+=======
+>>>>>>> ace18d562b6984b9d84a40409f4865ba7f01cf8d
         }
 
     }

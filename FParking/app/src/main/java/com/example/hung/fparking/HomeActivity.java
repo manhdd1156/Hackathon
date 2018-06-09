@@ -181,6 +181,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onCameraMoveStarted(int i) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 //
 ////        LatLng cameraLatLng = ;
 ////        String[] locaton = getLat_lng(cameraLatLng.toString());
@@ -192,6 +193,8 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 ////        selectPlaceLng = Double.parseDouble(locaton[1]);
 //        new GetNearPlace().execute();
 =======
+=======
+>>>>>>> ace18d562b6984b9d84a40409f4865ba7f01cf8d
         mMap.clear();
         check = 1;
         LatLng cameraLatLng = mMap.getCameraPosition().target;
