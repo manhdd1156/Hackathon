@@ -34,6 +34,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
+<<<<<<< HEAD
                                                 <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/editor/ic_monetization_on_black_24dp.xml" />
                                               </map>
                                             </option>
@@ -46,6 +47,9 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="paddingPercent" value="15" />
+=======
+                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_info_outline_black_24dp.xml" />
+>>>>>>> fcd2e7b24f109e073440f809baa208d13fed8352
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -55,8 +59,14 @@
                                   </option>
                                   <option name="values">
                                     <map>
+<<<<<<< HEAD
                                       <entry key="imageAsset" value="E:\Hoc\CP\design\license-plate.png" />
                                       <entry key="outputName" value="ic_action_money" />
+=======
+                                      <entry key="assetType" value="IMAGE" />
+                                      <entry key="imageAsset" value="C:\Users\KlotRoot\Desktop\calendar.png" />
+                                      <entry key="outputName" value="ic_action_calendar" />
+>>>>>>> fcd2e7b24f109e073440f809baa208d13fed8352
                                       <entry key="theme" value="CUSTOM" />
                                       <entry key="themeColor" value="fe6621" />
                                     </map>

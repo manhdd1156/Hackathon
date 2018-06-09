@@ -88,15 +88,14 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         sharedPreferences = getSharedPreferences("driver", 0);
         sharedPreferenceEditor = sharedPreferences.edit();
         String bookID = sharedPreferences.getString("bookingID", "");
-        String action = sharedPreferences.getString("action", "");
 
         buttonCheckin = (Button) findViewById(R.id.buttonCheckin);
 
         buttonCheckin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    locationManager.removeUpdates(Direction.this);
-                    new pushToOwner("2", "checkin", sharedPreferences.getString("bookingID", "")).execute((Void) null);
+                locationManager.removeUpdates(Direction.this);
+                new pushToOwner("2", "checkin", sharedPreferences.getString("bookingID", "")).execute((Void) null);
 
             }
         });
@@ -110,13 +109,20 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
         rlp.setMargins(0, 1500, 0, 0);
 
-        // Gọi Listener Changed Location
-        callLocationChangedListener();
-
         // Gửi yêu cầu chỉ đường
         sendRequest();
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // Cần check
+        locationManager.removeUpdates(Direction.this);
+        Intent intent = new Intent(Direction.this, OrderParking.class);
+        intent.putExtra("ParkingLocation", "");
+        startActivity(intent);
     }
 
     private void callLocationChangedListener() {
@@ -169,10 +175,10 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        mMap.getUiSettings().setZoomControlsEnabled(true);
+//        LatLng sydney = new LatLng(-34, 151);
+//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+//        mMap.getUiSettings().setZoomControlsEnabled(true);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -194,6 +200,7 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         GPSTracker gps = new GPSTracker(this);
         Location mLocation = gps.getLocation();
         mMap.addMarker(new MarkerOptions().position(new LatLng(mLocation.getLatitude(), mLocation.getLongitude())).title("Marker in Sydney"));
+
         // Gọi listener OnCameraMoveStartedListener
         mMap.setOnCameraMoveStartedListener(this);
         // Gọi listener LocationChanged
@@ -260,6 +267,9 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
     @Override
     public void onLocationChanged(Location location) {
 //        Log.e("Direction class onLocationChanged: ", "location changed");
+        if(sharedPreferences.getString("action", "").equals("2")){
+            locationManager.removeUpdates(Direction.this);
+        }
         if (!userGesture) {
             cameraPosition = new CameraPosition.Builder()
                     .target(new LatLng(location.getLatitude(), location.getLongitude()))             // Sets the center of the map to current location
@@ -271,8 +281,9 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         }
 
         Location distination = new Location("distination");
-        distination.setLatitude(Double.parseDouble(sharedPreferences.getString("parkingLat","")));
-        distination.setLongitude(Double.parseDouble(sharedPreferences.getString("parkingLng","")));
+
+        distination.setLatitude(Double.parseDouble(sharedPreferences.getString("parkingLat", "")));
+        distination.setLongitude(Double.parseDouble(sharedPreferences.getString("parkingLng", "")));
         double distanceValue = distination.distanceTo(location);
         if (distanceValue <= 15) {
 //            Log.e("Check in:", "ok");
