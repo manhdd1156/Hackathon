@@ -56,7 +56,9 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
         searchPlace();
+
         new GetNearPlace().execute();
     }
 
@@ -73,6 +75,16 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), 15));
 
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                String parkingLocation = marker.getPosition().toString();
+                Intent intentOrderFlagment = new Intent(HomeActivity.this, OrderParking.class);
+                intentOrderFlagment.putExtra("ParkingLocation", parkingLocation);
+                startActivity(intentOrderFlagment);
+                return false;
+            }
+        });
     }
 
     public void searchPlace() {
@@ -85,6 +97,10 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
             @Override
             public void onPlaceSelected(Place place) {
+                if (marker != null) {
+                    marker.remove();
+                }
+                mMap.clear();
                 MarkerOptions markerOptions = new MarkerOptions();
                 LatLng latLngMaker = place.getLatLng();
 
@@ -93,16 +109,15 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
                 check = 1;
                 String[] latlng = getLat_lng(latLngMaker.toString());
-                myLocationLat = Double.parseDouble(latlng[0]);
-                myLocationLng = Double.parseDouble(latlng[1]);
+                searchPlaceLat = Double.parseDouble(latlng[0]);
+                searchPlaceLng = Double.parseDouble(latlng[1]);
+
 
                 new GetNearPlace().execute();
-
             }
 
             @Override
             public void onError(Status status) {
-
             }
         });
     }
@@ -133,7 +148,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 selectPlaceLat = searchPlaceLat;
                 selectPlaceLng = searchPlaceLng;
             }
-
+            Log.e("GetNearPlace:", "O day");
             strJSON = httpHandler.getrequiement("https://fparking.net/realtimeTest/driver/get_near_my_location.php?latitude=" + selectPlaceLat + "&" + "longitude=" + selectPlaceLng);
             Log.e("SQL:", strJSON.toString());
             if (strJSON != null) {
@@ -165,17 +180,20 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         @Override
-        protected void onPreExecute() {
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
             int height = 75;
             int width = 75;
             BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.parking_icon);
             Bitmap b = bitmapdraw.getBitmap();
             Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
             super.onPreExecute();
-            for (int i = 0; i < nearParkingList.size(); i++) {
-                LatLng latLng = new LatLng(nearParkingList.get(i).getLattitude(), nearParkingList.get(i).getLongitude());
-                mMap.addMarker(new MarkerOptions()
-                        .position(latLng).icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
+            if (nearParkingList.size() > 0) {
+                for (int i = 0; i < nearParkingList.size(); i++) {
+                    LatLng latLng = new LatLng(nearParkingList.get(i).getLattitude(), nearParkingList.get(i).getLongitude());
+                    mMap.addMarker(new MarkerOptions()
+                            .position(latLng).icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
+                }
             }
         }
     }

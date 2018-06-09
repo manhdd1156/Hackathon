@@ -17,6 +17,16 @@ public class LoadFirstTime extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load_first_time);
         getSupportActionBar().hide();
+
+//        GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
+//
+//        double[] myLocation = new double[2];
+//        myLocation[0] = gpsTracker.getLatitude();
+//        myLocation[1] = gpsTracker.getLongitude();
+//
+//        Intent homeIntent = new Intent(LoadFirstTime.this, HomeActivity.class);
+//        homeIntent.putExtra("myLocation", myLocation);
+//        startActivity(homeIntent);
         splash();
     }
 

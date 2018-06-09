@@ -1,5 +1,7 @@
 package Service;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,37 +12,33 @@ import java.net.URL;
 
 public class HttpHandler {
 
+    public String getrequiement(String requirementUrl) {
 
-    public String getrequiement(String requiementURL) {
         String result = null;
+
         try {
-            URL url = new URL(requiementURL);
+            URL url = new URL(requirementUrl);
 
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.connect();
-
             result = convertStremToString(httpURLConnection.getInputStream());
 
         } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("MalformedURLException: ", e.getMessage());
+        } catch (IOException ioe) {
+            Log.e("IOException: ", ioe.getMessage());
         }
-
         return result;
     }
 
-    public String convertStremToString(InputStream inputStream) {
-
+    private String convertStremToString(InputStream inputStream) {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         StringBuilder sb = new StringBuilder();
-
         try {
             sb.append(bufferedReader.readLine()).append("\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return sb.toString();
     }
 }
