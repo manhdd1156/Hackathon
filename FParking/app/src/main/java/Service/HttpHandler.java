@@ -19,21 +19,25 @@ public class HttpHandler {
 
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.connect();
-
+            result = convertStremToString(httpURLConnection.getInputStream());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return "ahih";
+        return result;
     }
 
     public String convertStremToString(InputStream inputStream) {
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         StringBuilder sb = new StringBuilder();
-        
-        return sb;
+        try {
+            sb.append(bufferedReader.readLine()).append("\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
     }
 }
