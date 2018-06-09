@@ -80,6 +80,7 @@
         android:layout_marginTop="8dp"
         android:text="Check out"
         android:textSize="10sp"
+        android:textColor="#FFFFFF"
         android:background="@drawable/button_selector"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -94,6 +95,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Hủy"
+        android:textColor="#FFFFFF"
         android:textSize="10sp"
         android:background="@drawable/button_selector"
         app:layout_constraintEnd_toEndOf="parent"

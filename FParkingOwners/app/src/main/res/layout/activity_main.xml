@@ -6,106 +6,189 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        tools:layout_editor_absoluteX="103dp"
+        tools:layout_editor_absoluteY="0dp">
 
-    <TextView
-        android:id="@+id/lbAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Bãi đỗ :"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ListView
+            android:id="@+id/cars_list"
+            android:layout_width="0dp"
+            android:layout_height="281dp"
+            android:layout_below="@+id/imageView19"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lbTitle"
+            app:layout_constraintVertical_bias="1.0" />
 
-    <TextView
-        android:id="@+id/lbReport"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Được đánh giá :"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lbSpace" />
+        <ImageView
+            android:id="@+id/imgHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="39dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/header"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
 
-    <TextView
-        android:id="@+id/lbSpace"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
-        android:text="Sức chứa :"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lbAddress" />
+        <ImageView
+            android:id="@+id/imgInfor1"
+            android:layout_width="match_parent"
+            android:layout_height="152dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="66dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/checkoutinfo" />
 
-    <TextView
-        android:id="@+id/tvAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toEndOf="@+id/lbAddress"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/imgInfor2"
+            android:layout_width="match_parent"
+            android:layout_height="374dp"
+            android:layout_below="@+id/imgInfor1"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/checkoutinfo" />
 
-    <TextView
-        android:id="@+id/tvSpace"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="28dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintStart_toEndOf="@+id/lbSpace"
-        app:layout_constraintTop_toBottomOf="@+id/tvAddress" />
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="151dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="77dp"
+            android:drawableLeft="@drawable/ic_action_info"
+            android:gravity="center_vertical"
 
-    <RatingBar
-        android:id="@+id/ratingBar"
-        style="@style/Widget.AppCompat.RatingBar.Small"
-        android:layout_width="81dp"
-        android:layout_height="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="72dp"
-        android:rating="3"
-        app:layout_constraintStart_toEndOf="@+id/lbReport"
-        app:layout_constraintTop_toTopOf="parent" />
+            android:text="Thông tin"
+            android:textColor="@color/white_greyish"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/lbTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Các xe hiện tại"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="151dp"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView5"
+            android:layout_alignTop="@+id/imgInfor2"
+            android:layout_marginTop="13dp"
+            android:drawableLeft="@drawable/ic_action_car"
+            android:gravity="center_vertical"
+            android:text="Các xe hiện tại"
+            android:textColor="@color/white_greyish"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-    <ListView
-        android:id="@+id/cars_list"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lbTitle"
-        app:layout_constraintVertical_bias="1.0" />
+        <ImageView
+            android:id="@+id/imageView15"
+            android:layout_width="307dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView5"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/line" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="80dp"
-        android:layout_height="28dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="38dp"
-        android:background="@drawable/button_selector"
-        android:text="Thay đổi"
-        android:textSize="8sp"
-        app:layout_constraintStart_toEndOf="@+id/tvSpace"
-        app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="11dp"
+            android:text="Quản lý bãi đỗ"
+            android:textColor="@color/whitetext"
+            android:textSize="15sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/imageView15"
+            android:layout_marginStart="62dp"
+            android:text="Bãi đỗ:"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/imageView19"
+            android:layout_width="307dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView18"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/line" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView3"
+            android:layout_below="@+id/textView3"
+            android:layout_marginTop="8dp"
+            android:text="Sức chứa:"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView3"
+            android:layout_below="@+id/textView4"
+            android:layout_marginTop="8dp"
+            android:text="Được đánh giá:"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView15"
+            android:layout_marginLeft="20dp"
+            android:layout_toEndOf="@+id/textView3"
+            android:text="Khâm Thiên - Hà Nội"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvSpace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textView4"
+            android:layout_marginLeft="20dp"
+            android:layout_toEndOf="@+id/textView4"
+            android:text="3/30"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btnChange"
+            android:layout_width="54dp"
+            android:layout_height="23dp"
+            android:layout_below="@+id/textView3"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="7dp"
+            android:layout_toEndOf="@+id/tvSpace"
+            android:background="@drawable/button_selector"
+            android:text="THAY ĐỔI"
+            android:textColor="#FFFFFF"
+            android:textSize="7sp" />
+
+        <RatingBar
+            android:id="@+id/ratingBar2"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textView6"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="3dp"
+            android:layout_toEndOf="@+id/textView6"
+            android:rating="3" />
+
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

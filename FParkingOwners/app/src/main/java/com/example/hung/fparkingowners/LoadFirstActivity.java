@@ -25,5 +25,5 @@ public class LoadFirstActivity extends AppCompatActivity {
 
             }
         }, SPLASH_TIME_OUT);
-    }
+ }
 }
