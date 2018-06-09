@@ -162,6 +162,7 @@
             android:layout_marginTop="7dp"
             android:layout_toEndOf="@+id/tvSpace"
             android:background="@drawable/button_selector"
+            android:onClick="changeSpaceButtonClick"
             android:text="THAY ĐỔI"
             android:textColor="#FFFFFF"
             android:textSize="7sp" />
@@ -173,6 +174,7 @@
             android:layout_alignTop="@+id/textView4"
             android:layout_toEndOf="@+id/tvAddress"
             android:background="@drawable/button_selector"
+            android:onClick="statisticalOnclick"
             android:text="THỐNG KÊ"
             android:textColor="#FFFFFF"
             android:textSize="7sp" />

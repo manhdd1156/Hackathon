@@ -22,22 +22,7 @@ public class StatisticalActivity extends AppCompatActivity implements DatePicker
         getSupportActionBar().hide();
 //        fromDate = (ImageView) findViewById(R.id.imgFromDate);
 //        toDate = (ImageView) findViewById(R.id.imgToDate);
-        textViewFromDate =(TextView) findViewById(R.id.txtFromDate);
-        textViewToDate =(TextView) findViewById(R.id.txtToDate);
-        fromDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerFragment datePicker = new DatePickerFragment();
-                datePicker.show(getSupportFragmentManager(), "date picker");
-            }
-        });
-        toDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerFragment datePicker2 = new DatePickerFragment();
-                datePicker2.show(getSupportFragmentManager(), "date picker");
-            }
-        });
+
 
     }
 @Override
