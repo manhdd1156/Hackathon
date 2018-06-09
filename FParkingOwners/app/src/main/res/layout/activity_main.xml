@@ -91,15 +91,15 @@
             android:text="Quản lý bãi đỗ"
             android:textColor="@color/whitetext"
             android:textSize="15sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
+            android:layout_alignStart="@+id/cars_list"
             android:layout_below="@+id/imageView15"
-            android:layout_marginStart="62dp"
+            android:layout_marginLeft="9dp"
             android:text="Bãi đỗ:"
             android:textSize="16sp" />
 
@@ -164,6 +164,17 @@
             android:textColor="#FFFFFF"
             android:textSize="7sp" />
 
+        <Button
+            android:id="@+id/btnThongke"
+            android:layout_width="54dp"
+            android:layout_height="23dp"
+            android:layout_alignTop="@+id/textView4"
+            android:layout_toEndOf="@+id/tvAddress"
+            android:background="@drawable/button_selector"
+            android:text="THỐNG KÊ"
+            android:textColor="#FFFFFF"
+            android:textSize="7sp" />
+
         <RatingBar
             android:id="@+id/ratingBar2"
             style="@style/Widget.AppCompat.RatingBar.Small"
@@ -177,12 +188,15 @@
 
         <ListView
             android:id="@+id/cars_list"
-            android:layout_width="333dp"
-            android:layout_height="197dp"
-            android:layout_alignParentEnd="true"
+            android:layout_width="300dp"
+            android:layout_height="285dp"
             android:layout_below="@+id/imageView19"
-            android:layout_marginEnd="25dp" />
-
+            android:layout_centerHorizontal="true"
+            android:cacheColorHint="@color/black"
+            tools:layout_editor_absoluteX="42dp"
+            tools:layout_editor_absoluteY="291dp" />
     </RelativeLayout>
+
+
 
 </android.support.constraint.ConstraintLayout>
