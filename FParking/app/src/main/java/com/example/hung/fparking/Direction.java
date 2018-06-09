@@ -114,6 +114,7 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         GPSTracker gps = new GPSTracker(this);
         String directionLat = sharedPreferences.getString("parkingLat", "");
         String directionLng = sharedPreferences.getString("parkingLng", "");
+        Log.e("TOA DO DIEM DEN: ",directionLat+"---"+directionLng);
 
         String ori = directionLat + "," + directionLng;
         try {

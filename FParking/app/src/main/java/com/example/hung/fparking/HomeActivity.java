@@ -65,6 +65,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         searchPlace();
 
         new GetNearPlace().execute();
+
     }
 
 
@@ -84,14 +85,14 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-                if (sharedPreferences.getInt("parkingID", 0) != 0) {
+                if (sharedPreferences.getInt("parkingID", 0) == 0) {
                     String parkingLocation = marker.getPosition().toString();
                     Intent intentOrderFlagment = new Intent(HomeActivity.this, OrderParking.class);
                     intentOrderFlagment.putExtra("ParkingLocation", parkingLocation);
                     startActivity(intentOrderFlagment);
                 } else {
-                    //AlertDialog.Builder builderCaution = new AlertDialog.Builder(HomeActivity.this);
-                   // builderCaution.setMessage("Bạn đang đỗ xe nơi khác. Vui lòng thanh toán trước khi đặt bãi đỗ xe mới").;
+                    AlertDialog.Builder builderCaution = new AlertDialog.Builder(HomeActivity.this);
+                    builderCaution.setMessage("Bạn đang đỗ xe nơi khác. Vui lòng thanh toán trước khi đặt bãi đỗ xe mới").show();
                 }
                 return false;
             }
