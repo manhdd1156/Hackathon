@@ -2,8 +2,8 @@ package Entity;
 
 public class Distance {
 
-    private String text;
-    private int value;
+    public String text;
+    public int value;
 
     public Distance(String text, int value) {
         this.text = text;
