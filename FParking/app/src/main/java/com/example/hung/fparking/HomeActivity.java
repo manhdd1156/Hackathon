@@ -2,6 +2,7 @@ package com.example.hung.fparking;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import Model.GPSTracker;
 
 public class HomeActivity extends FragmentActivity implements OnMapReadyCallback, PlaceSelectionListener {
 
@@ -47,6 +50,10 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         mMap.setMyLocationEnabled(true);
+
+        GPSTracker gps = new GPSTracker(this);
+        Location mLocation = gps.getLocation();
+        mMap.addMarker(new MarkerOptions().position(new LatLng(mLocation.getLatitude(), mLocation.getLongitude())).title("Marker in Sydney"));
 
     }
 
