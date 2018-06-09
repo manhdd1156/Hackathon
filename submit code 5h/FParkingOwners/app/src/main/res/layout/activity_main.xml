@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        tools:layout_editor_absoluteX="103dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <ImageView
+            android:id="@+id/imgHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="39dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/header"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <ImageView
+            android:id="@+id/imgInfor1"
+            android:layout_width="match_parent"
+            android:layout_height="152dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="47dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/checkoutinfo" />
+
+        <ImageView
+            android:id="@+id/imgInfor2"
+            android:layout_width="match_parent"
+            android:layout_height="393dp"
+            android:layout_below="@+id/imgInfor1"
+            android:layout_marginBottom="0dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/checkoutinfo" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="151dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/imageView19"
+            android:layout_marginTop="59dp"
+            android:drawableLeft="@drawable/ic_action_info"
+
+            android:gravity="center_vertical"
+            android:text="Thông tin"
+            android:textColor="@color/white_greyish"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="151dp"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView5"
+            android:layout_alignTop="@+id/imgInfor2"
+            android:layout_marginTop="13dp"
+            android:drawableLeft="@drawable/ic_action_car"
+            android:gravity="center_vertical"
+            android:text="Các xe hiện tại"
+            android:textColor="@color/white_greyish"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imageView15"
+            android:layout_width="307dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView5"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/line" />
+
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="11dp"
+            android:text="Quản lý bãi đỗ"
+            android:textColor="@color/whitetext"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/cars_list"
+            android:layout_below="@+id/imageView15"
+            android:layout_marginLeft="9dp"
+            android:text="Bãi đỗ:"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/imageView19"
+            android:layout_width="307dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView18"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/line" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView3"
+            android:layout_below="@+id/textView3"
+            android:layout_marginTop="8dp"
+            android:text="Sức chứa:"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView3"
+            android:layout_below="@+id/textView4"
+            android:layout_marginTop="8dp"
+            android:text="Được đánh giá:"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tvAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView15"
+            android:layout_marginLeft="20dp"
+            android:layout_toEndOf="@+id/textView3"
+            android:text="Khâm Thiên - Hà Nội"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tvSpace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textView4"
+            android:layout_marginLeft="20dp"
+            android:layout_toEndOf="@+id/textView4"
+            android:text="3/30"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/btnChange"
+            android:layout_width="54dp"
+            android:layout_height="23dp"
+            android:layout_below="@+id/textView3"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="7dp"
+            android:layout_toEndOf="@+id/tvSpace"
+            android:background="@drawable/button_selector"
+            android:onClick="changeSpaceButtonClick"
+            android:text="THAY ĐỔI"
+            android:textColor="#FFFFFF"
+            android:textSize="7sp" />
+
+        <Button
+            android:id="@+id/btnThongke"
+            android:layout_width="54dp"
+            android:layout_height="23dp"
+            android:layout_alignTop="@+id/textView4"
+            android:layout_toEndOf="@+id/tvAddress"
+            android:background="@drawable/button_selector"
+            android:text="THỐNG KÊ"
+            android:textColor="#FFFFFF"
+            android:textSize="7sp" />
+
+        <RatingBar
+            android:id="@+id/ratingBar2"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textView6"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="3dp"
+            android:layout_toEndOf="@+id/textView6"
+            android:rating="3" />
+
+        <ListView
+            android:id="@+id/cars_list"
+            android:layout_width="300dp"
+            android:layout_height="318dp"
+            android:layout_below="@+id/imageView19"
+            android:layout_centerHorizontal="true"
+            android:cacheColorHint="@color/black"
+            tools:layout_editor_absoluteX="42dp"
+            tools:layout_editor_absoluteY="291dp" />
+    </RelativeLayout>
+
+
+</android.support.constraint.ConstraintLayout>
