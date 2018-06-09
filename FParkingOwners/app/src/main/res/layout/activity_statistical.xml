@@ -123,4 +123,15 @@
         android:layout_alignStart="@+id/txtFromDate"
         android:text="TextView"
         android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="182dp"
+        android:layout_height="39dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="29dp"
+        android:background="@drawable/button_selector"
+        android:text="THỐNG KÊ"
+        android:textColor="#FFFFFF" />
 </RelativeLayout>
