@@ -1,12 +1,15 @@
 package com.example.hung.fparking;
 
+import android.app.DialogFragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -36,6 +39,8 @@ public class OrderParking extends AppCompatActivity {
     String time = "N/A";
     double parkingLatitde = 0;
     double parkinglongitude = 0;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor sharedPreferenceEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +54,20 @@ public class OrderParking extends AppCompatActivity {
         textViewPrice = findViewById(R.id.textViewPrice);
         textViewTime = findViewById(R.id.textViewTime);
         buttonDat_Cho = findViewById(R.id.buttonDat_Cho_Ngay);
+
+        buttonDat_Cho.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharedPreferences = getSharedPreferences("driver", 0);
+                sharedPreferenceEditor = sharedPreferences.edit();
+                sharedPreferenceEditor.putString("parkingLat", parkingLatitde + "");
+                sharedPreferenceEditor.putString("parkingLng", parkinglongitude + "");
+                sharedPreferenceEditor.commit();
+
+                Intent intentNextDirection = new Intent(OrderParking.this, Direction.class);
+                startActivity(intentNextDirection);
+            }
+        });
 
         new GetDetailParking().execute();
     }

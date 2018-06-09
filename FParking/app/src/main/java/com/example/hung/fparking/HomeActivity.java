@@ -90,8 +90,8 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                     intentOrderFlagment.putExtra("ParkingLocation", parkingLocation);
                     startActivity(intentOrderFlagment);
                 } else {
-                    AlertDialog.Builder builderCaution = new AlertDialog.Builder(HomeActivity.this);
-                    builderCaution.setMessage("Bạn đang đỗ xe nơi khác. Vui lòng thanh toán trước khi đặt bãi đỗ xe mới").show();
+                    //AlertDialog.Builder builderCaution = new AlertDialog.Builder(HomeActivity.this);
+                   // builderCaution.setMessage("Bạn đang đỗ xe nơi khác. Vui lòng thanh toán trước khi đặt bãi đỗ xe mới").;
                 }
                 return false;
             }
