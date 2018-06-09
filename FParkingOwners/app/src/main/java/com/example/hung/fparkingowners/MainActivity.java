@@ -65,8 +65,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,4 +72,5 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
     }
+
 }

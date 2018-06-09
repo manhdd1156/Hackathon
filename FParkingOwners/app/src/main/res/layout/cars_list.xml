@@ -80,6 +80,7 @@
         android:layout_marginTop="8dp"
         android:text="Check out"
         android:textSize="10sp"
+        android:background="@drawable/button_selector"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -94,6 +95,7 @@
         android:layout_marginTop="8dp"
         android:text="Hủy"
         android:textSize="10sp"
+        android:background="@drawable/button_selector"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.34"
         app:layout_constraintStart_toEndOf="@+id/btnAccept"

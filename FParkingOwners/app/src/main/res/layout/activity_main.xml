@@ -97,11 +97,12 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="67dp"
-        android:layout_height="39dp"
+        android:layout_width="80dp"
+        android:layout_height="28dp"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="38dp"
+        android:background="@drawable/button_selector"
         android:text="Thay đổi"
         android:textSize="8sp"
         app:layout_constraintStart_toEndOf="@+id/tvSpace"
