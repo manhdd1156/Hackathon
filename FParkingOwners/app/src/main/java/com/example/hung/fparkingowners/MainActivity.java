@@ -1,9 +1,12 @@
 package com.example.hung.fparkingowners;
 
-import android.app.NotificationChannel;
+import android.app.ActivityManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.app.NotificationManager;
@@ -29,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,9 +67,8 @@ import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    public String ownerPhoneNumber,totalSpace;
+    public String ownerPhoneNumber,totalSpace,currentBooking;
     ListView lv;
-    Button btnStatistical;
     BookingDTO bookingDTO;
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
@@ -87,16 +90,8 @@ public class MainActivity extends AppCompatActivity {
         pref = getApplicationContext().getSharedPreferences("searchVariable", 0);// 0 - là chế độ private
         editor = pref.edit();
         tvSpace = (TextView) findViewById(R.id.tvSpace);
-        btnStatistical = (Button) findViewById(R.id.btnThongke);
         tvAddress = (TextView) findViewById(R.id.tvAddress);
         lv = (ListView) findViewById(R.id.cars_list);
-        btnStatistical.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Statistical.class);
-                startActivity(intent);
-            }
-        });
         PusherOptions options = new PusherOptions();
         options.setCluster("ap1");
         Pusher pusher = new Pusher(Constants.PUSHER_KEY, options);
@@ -115,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-//                createNotification();
             }
         });
         channel.bind("CHECKIN_FOR_OWNER", new SubscriptionEventListener() {
@@ -130,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-//                createNotification();
 
             }
         });
@@ -146,11 +139,33 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-//                createNotification();
-
             }
         });
         pusher.connect();
+    }
+    @Override
+    public void onNewIntent(Intent intent) {
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            if (extras.containsKey("NotificationMessage")) {
+                setContentView(R.layout.activity_main);
+                onResume();
+                // extract the extra-data in the Notification
+                String msg = extras.getString("NotificationMessage");
+                if (msg.contains("order")) {
+//                    createNotification("order","Có 1 xe mới : " + pref.getString("licensePlate", "") + " muốn đặt chỗ");
+                    createDialog("order");
+                } else if (msg.contains("checkin")) {
+//                    createNotification("checkin","Xe " + pref.getString("licensePlate", "") + " đã đến và muốn vào bãi");
+                    createDialog("checkin");
+                } else if (msg.contains("checkout")) {
+//                    createNotification("checkout","Xe " + pref.getString("licensePlate", "") + " muốn thanh toán");
+                    createDialog("checkout");
+                }
+            }
+        }
+
+
     }
     @Override
     public void onBackPressed() {
@@ -203,6 +218,18 @@ public class MainActivity extends AppCompatActivity {
         }
         return phoneMgr.getLine1Number();
     }
+    public static boolean hasOpenedDialogs(FragmentActivity activity) {
+        List<Fragment> fragments = activity.getSupportFragmentManager().getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof DialogFragment) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
     private void handleDataMessage(final JSONObject json, String action) {
         try {
             final String carID = json.getString("carID");
@@ -211,7 +238,12 @@ public class MainActivity extends AppCompatActivity {
             editor.commit();
 
             if (action.equals("order")) { // người dùng order => insert booking với status = 1
-                new SearchBookingTask("carID=" + carID, "order").execute((Void) null);
+                String message = json.getString("message");
+                if(message.equals("cancel")) {
+                    System.out.println("cancel");
+                }else {
+                    new SearchBookingTask("carID=" + carID, "order").execute((Void) null);
+                }
 //                        final BookingDTO b = new BookingDTO(0, Integer.parseInt(parkingID), Integer.parseInt(carID), "1", "", "", "", "", Double.parseDouble("0"));
             } else if (action.equals("checkin")) {
                 final String bookingID = json.getString("bookingID");
@@ -248,12 +280,12 @@ public class MainActivity extends AppCompatActivity {
                 String parkingid = oneParking.getString("parkingID");
                 String address = oneParking.getString("address");
                 String space = oneParking.getString("space");
-                String currentSpace = oneParking.getString("currentSpace");
+                currentBooking = oneParking.getString("currentSpace");
                 editor.putInt("parkingID", Integer.parseInt(parkingid));
                 editor.commit();
                 setText(tvAddress, address);
                 totalSpace = space;
-                setText(tvSpace, currentSpace + "/" + space);
+                setText(tvSpace, currentBooking + "/" + space);
             } catch (Exception ex) {
                 Log.e("Error:", ex.getMessage());
             }
@@ -263,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            new GetBookingTask(pref.getInt("parkingID", 0) + "").execute((Void) null);
+            new GetBookingTask(pref.getInt("parkingID", 3) + "").execute((Void) null);
 //            new ManagerBookingTask("get", getApplicationContext(), getWindow().getDecorView().getRootView(), parkingID, MainActivity.this, lv, null);
         }
     }
@@ -320,7 +352,7 @@ public class MainActivity extends AppCompatActivity {
                     BookingDTO b = new BookingDTO(Integer.parseInt(bookingID), Integer.parseInt(txtSearch), 0, status, checkinTime, checkoutTime, licensePlate, type, Double.parseDouble(price));
                     list.add(b);
                 }
-                System.out.println(list);
+                System.out.println("list ra listview : " + list);
                 return list;
 
             } catch (Exception ex) {
@@ -334,12 +366,14 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(list);
             pdLoading.dismiss();
 //            System.out.println("set list view data : " + list);
-            if (list != null && list.size() > 0) {
-                System.out.println(list);
+
+//            if (list != null && list.size() > 0) {
+//                System.out.println(list);
 
                 CarAdapter adapter = new CarAdapter(getWindow().getDecorView().getRootView(), MainActivity.this, list);
                 lv.setAdapter(adapter);
-            }
+//            }
+
         }
     }
     class CarAdapter extends BaseAdapter {
@@ -392,6 +426,7 @@ public class MainActivity extends AppCompatActivity {
                         String checkinTime = dateFormatter.format(calendar.getTime().getTime());
                         BookingDTO b = entry;
                         b.setStatus("2");
+                        b.setCarID(pref.getInt("carID",0));
                         b.setCheckinTime(checkinTime.toString());
                         new UpdateBookingTask(b).execute((Void) null);
 //                    btnAcept.setText("CHeckOut");
@@ -405,6 +440,7 @@ public class MainActivity extends AppCompatActivity {
                         // TODO Auto-generated method stub
                         BookingDTO b = entry;
                         b.setStatus("0");
+                        b.setCarID(pref.getInt("carID",0));
                         new UpdateBookingTask(b).execute((Void) null);
 //                    btnAcept.setText("CHeckOut");
                         onResume();
@@ -426,9 +462,10 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int choice) {
                                 switch (choice) {
                                     case DialogInterface.BUTTON_POSITIVE:
-
+//                                        dialog.dismiss();
                                         BookingDTO b = entry;
                                         b.setStatus("3");
+                                        b.setCarID(pref.getInt("carID",0));
                                         b.setCheckoutTime(checkoutTime.toString());
                                         new UpdateBookingTask(b).execute((Void) null);
                                         onResume();
@@ -448,7 +485,10 @@ public class MainActivity extends AppCompatActivity {
                             double diffInHours = diff / ((double) 1000 * 60 * 60);
                             NumberFormat formatter = new DecimalFormat("###,###");
                             NumberFormat formatterHour = new DecimalFormat("0.00");
-//                            System.out.println(formatter.format(4.0));
+                            String totalPrice = formatter.format(diffInHours * entry.getPrice());
+                            if(diffInHours<1) {
+                                totalPrice = entry.getPrice() +"";
+                            }
                             builder.setMessage("\tHóa đơn checkout \n"
                                     + "Biển số :          " + entry.getLicensePlate() + "\n"
                                     + "loại xe :           " + entry.getTypeCar() + "\n"
@@ -456,7 +496,7 @@ public class MainActivity extends AppCompatActivity {
                                     + "thời gian ra :   " + checkoutTime + "\n"
                                     + "giá đỗ :           " + formatter.format(entry.getPrice()) + "vnđ\n"
                                     + "thời gian đỗ :  " + formatterHour.format(diffInHours) + " giờ \n"
-                                    + "tổng giá :        " + formatter.format(diffInHours * entry.getPrice()) + "vnđ")
+                                    + "tổng giá :        " + totalPrice + "vnđ")
                                     .setPositiveButton("Yes", dialogClickListener)
                                     .setNegativeButton("No", dialogClickListener).setCancelable(false).show();
 
@@ -554,39 +594,13 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (action.contains("order")) {
-                    createNotification("Có Xe : " + pref.getString("licensePlate", "") + "muốn đặt chỗ");
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int choice) {
-                            switch (choice) {
-                                case DialogInterface.BUTTON_POSITIVE:
-                                    // create booking
-                                    BookingDTO b = new BookingDTO(pref.getInt("bookingID", 0), pref.getInt("parkingID", 0), pref.getInt("carID", 0), "", "", "", "", "", 5000);
-                                    new CreateBookingTask(b).execute((Void) null);
-//                                    new ManagerBookingTask("insert", getApplicationContext(), getWindow().getDecorView().getRootView(), "not need", MainActivity.this, lv, b);
-
-                                    break;
-                                case DialogInterface.BUTTON_NEGATIVE:
-                                    BookingDTO bb = new BookingDTO(pref.getInt("bookingID", 0), pref.getInt("parkingID", 0), pref.getInt("carID", 0), "0", "", "", "", "", 5000);
-                                    new UpdateBookingTask(bb).execute((Void) null);
-
-                                    break;
-                            }
-                        }
-                    };
-                    try {
-                        builder.setMessage("Xe " + pref.getString("licensePlate", "") + "muốn đỗ xe trong bãi bạn có đồng ý không")
-                                .setPositiveButton("Có", dialogClickListener)
-                                .setNegativeButton("Không", dialogClickListener).setCancelable(false).show();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    createNotification("order","Có 1 Xe mới : " + pref.getString("licensePlate", "") + " muốn đặt chỗ");
+                    createDialog("order");
                 } else if (action.contains("checkin")) {
-                    createNotification("Xe " + pref.getString("licensePlate", "") + " đã đến và muốn vào bãi");
+                    createNotification("checkin","Xe " + pref.getString("licensePlate", "") + " đã đến và muốn vào bãi");
                     createDialog("checkin");
                 } else if (action.contains("checkout")) {
-                    createNotification("Xe " + pref.getString("licensePlate", "") + " muốn thanh toán");
+                    createNotification("checkout","Xe " + pref.getString("licensePlate", "") + " muốn thanh toán");
                     createDialog("checkout");
 
 
@@ -685,24 +699,25 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject formData = new JSONObject();
                 formData.put("bookingID", b.getBookingID());
                 formData.put("status", b.getStatus());
-                Calendar calendar = Calendar.getInstance();
+//                Calendar calendar = Calendar.getInstance();
                 DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String checkinTime = dateFormatter.format(calendar.getTime().getTime());
+//                String checkinTime = dateFormatter.format(calendar.getTime().getTime());
                 if (b.getStatus().equals("2")) {
-                    b.setCheckinTime(checkinTime);
+//                    b.setCheckinTime(checkinTime);
                     formData.put("checkinTime", b.getCheckinTime());
                     formData.put("carID", b.getCarID());
                     formData.put("actioncheck", "checkin");
                     formData.put("actionspace", "Inc");
-
+                    currentBooking = (Integer.parseInt(currentBooking)+1) +"";
                 } else if (b.getStatus().equals("3")) {
-                    String checkoutTime = dateFormatter.format(calendar.getTime().getTime());
-                    b.setCheckoutTime(checkoutTime);
+//                    String checkoutTime = dateFormatter.format(calendar.getTime().getTime());
+//                    b.setCheckoutTime(checkoutTime);
                     formData.put("checkoutTime", b.getCheckoutTime());
+//                    formData.put("carID", b.getCarID());
                     formData.put("actioncheck", "checkout");
                     formData.put("actionspace", "Desc");
-                }
-                else if(b.getStatus().equals("0")) {
+                    currentBooking = (Integer.parseInt(currentBooking)-1) +"";
+                } else if(b.getStatus().equals("0")) {
                     formData.put("actioncheck", "cancel");
                     httpHandler.post(Constants.API_URL + "booking/update_BookingInfor.php", formData.toString());
                     return false;
@@ -739,7 +754,6 @@ public class MainActivity extends AppCompatActivity {
                 if (jsonObj.getInt("size") > 0) {
                     success = true;
                 }
-
             } catch (Exception ex) {
                 Log.e("Error:", ex.getMessage());
             }
@@ -758,40 +772,107 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-    public void createNotification(String title) {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("NotificationMessage", "order");
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        String NOTIFICATION_CHANNEL_ID = "my_channel_id_01";
+    class UpdateBooingSpaceTask extends AsyncTask<Void, Void, Boolean> {
+        ProgressDialog pdLoading;
+        String action,space;
+        boolean success = false;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications", NotificationManager.IMPORTANCE_HIGH);
-
-            // Configure the notification channel.
-            notificationChannel.setDescription("Channel description");
-            notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.RED);
-            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
-            notificationChannel.enableVibration(true);
-            notificationManager.createNotificationChannel(notificationChannel);
+        public UpdateBooingSpaceTask(String space, String action) {
+            this.action = action;
+            this.space = space;
+            pdLoading = new ProgressDialog(MainActivity.this);
         }
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
 
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+            //this method will be running on UI thread
+            pdLoading.setMessage("\tĐợi xíu...");
+            pdLoading.setCancelable(false);
+            pdLoading.show();
 
-        notificationBuilder.setAutoCancel(true)
-//                .setDefaults(Notification.DE)
-                .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.ic_launcher_round)
-                .setTicker("Hearty365")
-                .setPriority(3)
-                .setContentTitle("Default notification")
-                .setContentText("Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
-                .setContentInfo("Info")
-                .addAction(R.drawable.ic_launcher_round, "Đồng ý", pIntent)
-                .addAction(R.drawable.ic_launcher_round, "Hủy", pIntent);
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            HttpHandler httpHandler = new HttpHandler();
+            try {
+                Log.e("Update-Async space ", space);
+                JSONObject formData = new JSONObject();
+                formData.put("actionspace", action);
+                formData.put("space", space);
+                formData.put("parkingID", pref.getInt("parkingID",0));
+//                formData.put("actionspace", "Inc");
+                System.out.println(formData.toString());
+                String json = httpHandler.post(Constants.API_URL + "booking/update_BookingSpace.php", formData.toString());
+
+                System.out.println("=============================");
+                System.out.println("json update space : " + json);
+                System.out.println("=============================");
+
+                JSONObject jsonObj = new JSONObject(json);
+                if (jsonObj.getInt("size") > 0) {
+                    success = true;
+                }
+
+            } catch (Exception ex) {
+                Log.e("Error tạo :", ex.getMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            pdLoading.dismiss();
+            onResume();
+        }
+
+    }
+    public static boolean isRunning(Context ctx) {
+        ActivityManager activityManager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
+
+        List<ActivityManager.RunningTaskInfo> tasks = activityManager.getRunningTasks(Integer.MAX_VALUE);
+
+        for (ActivityManager.RunningTaskInfo task : tasks) {
+            if (ctx.getPackageName().equalsIgnoreCase(task.baseActivity.getPackageName()))
+                return true;
+        }
+        return false;
+    }
+    public void createNotification(String action,String title) {
+        Intent intent = new Intent(this, MainActivity.class);
+//        intent.putExtra("NotificationMessage", "order");
+        if (isRunning(MainActivity.this)) {
+            // App is running
+        } else {
+            // App is not running
+            if(action.equals("order")) {
+                intent.putExtra("NotificationMessage", "order");
+            }else if(action.equals("checkin")) {
+                intent.putExtra("NotificationMessage", "checkin");
+            }else if(action.equals("checkout")) {
+                intent.putExtra("NotificationMessage", "checkout");
+            }
+        }
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+//
+//        // Build notification
+//        // Actions are just fake
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext())
+                .setContentTitle(title)
+                .setContentText("Hãy xác nhận yêu cầu").setSmallIcon(R.drawable.apply)
+                .setAutoCancel(true).setPriority(2)
+                .setContentIntent(pIntent)
+                .addAction(R.drawable.apply, "Đồng ý", pIntent)
+                .addAction(R.drawable.apply, "Hủy", pIntent).setColor(Color.GREEN);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
         try {
             Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
@@ -799,13 +880,38 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        notificationManager.notify(0, mBuilder.build());
 
-        notificationManager.notify(/*notification id*/1, notificationBuilder.build());
     }
 
     public void createDialog(String action) {
-        if (action.equals("action")) {
+        if (action.equals("order")) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int choice) {
+                    switch (choice) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            // create booking
+                            BookingDTO b = new BookingDTO(pref.getInt("bookingID", 0), pref.getInt("parkingID", 0), pref.getInt("carID", 0), "", "", "", "", "", 5000);
+                            new CreateBookingTask(b).execute((Void) null);
+//                                    new ManagerBookingTask("insert", getApplicationContext(), getWindow().getDecorView().getRootView(), "not need", MainActivity.this, lv, b);
 
+                            break;
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            BookingDTO bb = new BookingDTO(pref.getInt("bookingID", 0), pref.getInt("parkingID", 0), pref.getInt("carID", 0), "0", "", "", "", "", 5000);
+                            new UpdateBookingTask(bb).execute((Void) null);
+                            break;
+                    }
+                }
+            };
+            try {
+                builder.setMessage("Xe " + pref.getString("licensePlate", "") + "muốn đỗ xe trong bãi bạn có đồng ý không")
+                        .setPositiveButton("Có", dialogClickListener)
+                        .setNegativeButton("Không", dialogClickListener).setCancelable(false).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else if (action.equals("checkin")) {
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -813,9 +919,13 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int choice) {
                     switch (choice) {
                         case DialogInterface.BUTTON_POSITIVE:
+                            Calendar calendar = Calendar.getInstance();
+                            DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            final String checkinTime = dateFormatter.format(calendar.getTime().getTime());
+                            editor.putString("checkinTime",checkinTime);
                             editor.putString("status", "2");
                             editor.commit();
-                            BookingDTO b = new BookingDTO(pref.getInt("bookingID", 0), pref.getInt("parkingID", 0), pref.getInt("carID", 0), pref.getString("status", ""), "", "", "", "", 5000);
+                            BookingDTO b = new BookingDTO(pref.getInt("bookingID", 0), pref.getInt("parkingID", 0), pref.getInt("carID", 0), pref.getString("status", ""), pref.getString("checkinTime",""), "", "", "", 5000);
                             new UpdateBookingTask(b).execute((Void) null);
                             break;
                         case DialogInterface.BUTTON_NEGATIVE:
@@ -827,7 +937,7 @@ public class MainActivity extends AppCompatActivity {
             };
 
             try {
-                builder.setMessage("Xe " + pref.getString("licensePlate", "") + "muốn checkin bạn có đồng ý không")
+                builder.setMessage("Xe " + pref.getString("licensePlate", "") + "muốn vào bãi bạn có đồng ý không")
                         .setPositiveButton("Có", dialogClickListener)
                         .setNegativeButton("Không", dialogClickListener).setCancelable(false).show();
             } catch (Exception e) {
@@ -840,6 +950,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int choice) {
                     switch (choice) {
                         case DialogInterface.BUTTON_POSITIVE:
+//                            dialog.dismiss();
                             Calendar calendar = Calendar.getInstance();
                             DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             final String checkoutTime = dateFormatter.format(calendar.getTime().getTime());
@@ -848,13 +959,12 @@ public class MainActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int choice) {
                                     switch (choice) {
                                         case DialogInterface.BUTTON_POSITIVE:
-
                                             editor.putString("status", "3");
                                             editor.commit();
 //                                            bookingDTO.setCheckoutTime(checkoutTime.toString());
-                                            BookingDTO b = new BookingDTO(pref.getInt("bookingID", 0), pref.getInt("parkingID", 0), pref.getInt("carID", 0), pref.getString("status", ""), pref.getString("checkinTime", ""), "", pref.getString("licensePlate", ""), pref.getString("type", ""), Double.parseDouble(pref.getString("price", "")));
+                                            BookingDTO b = new BookingDTO(pref.getInt("bookingID", 0), pref.getInt("parkingID", 0), pref.getInt("carID", 0), pref.getString("status", ""), pref.getString("checkinTime", ""), checkoutTime, pref.getString("licensePlate", ""), pref.getString("type", ""), Double.parseDouble(pref.getString("price", "")));
                                             new UpdateBookingTask(b).execute((Void) null);
-//
+
 //                                            new ManagerBookingTask("update", getApplicationContext(), getWindow().getDecorView().getRootView(), parkingID, MainActivity.this, lv, bookingDTO);
                                             break;
                                         case DialogInterface.BUTTON_NEGATIVE:
@@ -898,7 +1008,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             try {
-                builder.setMessage("Xe " + pref.getString("licensePlate", "") + "muốn checkout bạn có đồng ý không")
+                builder.setMessage("Xe " + pref.getString("licensePlate", "") + "muốn thanh toán bạn có đồng ý không")
                         .setPositiveButton("Có", dialogClickListener)
                         .setNegativeButton("Không", dialogClickListener).setCancelable(false).show();
 
@@ -908,6 +1018,46 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void changeSpaceButtonClick(View view) {
+        LayoutInflater li = LayoutInflater.from(MainActivity.this);
+        View promptsView = li.inflate(R.layout.change_space, null);
 
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                MainActivity.this);
+
+        // set prompts.xml to alertdialog builder
+        alertDialogBuilder.setView(promptsView);
+
+        final EditText userInput = (EditText) promptsView
+                .findViewById(R.id.editTextDialogUserInput);
+        userInput.setHint(currentBooking);
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("Đồng ý",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                // get user input and set it to result
+                                // edit text
+                                System.out.println(userInput.getText().toString());
+                                new UpdateBooingSpaceTask(userInput.getText().toString(),"Manul").execute((Void)null);
+                                onResume();
+//                                result.setText(userInput.getText());
+                            }
+                        })
+                .setNegativeButton("Hủy",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
     }
+
 }
+
