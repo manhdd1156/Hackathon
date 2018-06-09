@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".MainActivity">
 
     <RelativeLayout
@@ -27,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="152dp"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="66dp"
+            android:layout_marginTop="47dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:scaleType="fitXY"
@@ -36,8 +37,9 @@
         <ImageView
             android:id="@+id/imgInfor2"
             android:layout_width="match_parent"
-            android:layout_height="374dp"
+            android:layout_height="393dp"
             android:layout_below="@+id/imgInfor1"
+            android:layout_marginBottom="0dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:scaleType="fitXY"
@@ -48,11 +50,11 @@
             android:layout_width="151dp"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="35dp"
-            android:layout_marginTop="77dp"
+            android:layout_alignStart="@+id/imageView19"
+            android:layout_marginTop="59dp"
             android:drawableLeft="@drawable/ic_action_info"
-            android:gravity="center_vertical"
 
+            android:gravity="center_vertical"
             android:text="Thông tin"
             android:textColor="@color/white_greyish"
             android:textSize="16sp"
@@ -189,14 +191,13 @@
         <ListView
             android:id="@+id/cars_list"
             android:layout_width="300dp"
-            android:layout_height="285dp"
+            android:layout_height="318dp"
             android:layout_below="@+id/imageView19"
             android:layout_centerHorizontal="true"
             android:cacheColorHint="@color/black"
             tools:layout_editor_absoluteX="42dp"
             tools:layout_editor_absoluteY="291dp" />
     </RelativeLayout>
-
 
 
 </android.support.constraint.ConstraintLayout>

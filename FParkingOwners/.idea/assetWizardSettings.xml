@@ -40,24 +40,13 @@
                                           </PersistentState>
                                         </value>
                                       </entry>
-                                      <entry key="image">
-                                        <value>
-                                          <PersistentState>
-                                            <option name="values">
-                                              <map>
-                                                <entry key="paddingPercent" value="15" />
-                                              </map>
-                                            </option>
-                                          </PersistentState>
-                                        </value>
-                                      </entry>
                                     </map>
                                   </option>
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="C:\Users\KlotRoot\Downloads\sportscar.png" />
-                                      <entry key="outputName" value="ic_action_car" />
+                                      <entry key="imageAsset" value="E:\Hoc\CP\design\calendar.png" />
+                                      <entry key="outputName" value="ic_action_calendar" />
                                       <entry key="theme" value="CUSTOM" />
                                       <entry key="themeColor" value="fe6621" />
                                     </map>

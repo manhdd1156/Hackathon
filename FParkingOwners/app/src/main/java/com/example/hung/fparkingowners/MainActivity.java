@@ -65,6 +65,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     public String ownerPhoneNumber,totalSpace;
     ListView lv;
+    Button btnStatistical;
     BookingDTO bookingDTO;
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
@@ -86,8 +87,16 @@ public class MainActivity extends AppCompatActivity {
         pref = getApplicationContext().getSharedPreferences("searchVariable", 0);// 0 - là chế độ private
         editor = pref.edit();
         tvSpace = (TextView) findViewById(R.id.tvSpace);
+        btnStatistical = (Button) findViewById(R.id.btnThongke);
         tvAddress = (TextView) findViewById(R.id.tvAddress);
         lv = (ListView) findViewById(R.id.cars_list);
+        btnStatistical.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Statistical.class);
+                startActivity(intent);
+            }
+        });
         PusherOptions options = new PusherOptions();
         options.setCluster("ap1");
         Pusher pusher = new Pusher(Constants.PUSHER_KEY, options);
