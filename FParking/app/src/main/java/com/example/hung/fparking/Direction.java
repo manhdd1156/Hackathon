@@ -25,7 +25,6 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,8 +45,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import Entity.DirectionFinder;
-import Entity.DirectionFinderListener;
+import Model.DirectionFinder;
+import Model.DirectionFinderListener;
 import Entity.Route;
 import Model.GPSTracker;
 

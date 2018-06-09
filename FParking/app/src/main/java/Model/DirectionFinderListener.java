@@ -1,6 +1,8 @@
-package Entity;
+package Model;
 
 import java.util.List;
+
+import Entity.Route;
 
 public interface DirectionFinderListener {
 

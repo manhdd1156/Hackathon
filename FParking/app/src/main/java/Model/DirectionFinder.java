@@ -1,4 +1,4 @@
-package Entity;
+package Model;
 
 import android.os.AsyncTask;
 
@@ -18,6 +18,10 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+
+import Entity.Distance;
+import Entity.Duration;
+import Entity.Route;
 
 public class DirectionFinder {
 
