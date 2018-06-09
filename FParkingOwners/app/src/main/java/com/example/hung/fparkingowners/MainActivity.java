@@ -67,14 +67,16 @@ import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    public String ownerPhoneNumber,totalSpace,currentBooking;
+    public String ownerPhoneNumber, totalSpace, currentBooking;
     ListView lv;
     BookingDTO bookingDTO;
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
-    TextView tvSpace,tvAddress;
+    TextView tvSpace, tvAddress;
     String wantPermission = android.Manifest.permission.READ_PHONE_STATE;
     private static final int PERMISSION_REQUEST_CODE = 1;
+    Pusher pusher;
+    Channel channel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,9 +96,9 @@ public class MainActivity extends AppCompatActivity {
         lv = (ListView) findViewById(R.id.cars_list);
         PusherOptions options = new PusherOptions();
         options.setCluster("ap1");
-        Pusher pusher = new Pusher(Constants.PUSHER_KEY, options);
+        pusher = new Pusher(Constants.PUSHER_KEY, options);
 
-        Channel channel = pusher.subscribe(Constants.PUSHER_CHANNEL);
+        channel = pusher.subscribe(Constants.PUSHER_CHANNEL);
 
         channel.bind("ORDER_FOR_OWNER", new SubscriptionEventListener() {
             @Override
@@ -142,7 +144,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         pusher.connect();
+
+        Button btnStatistical = (Button) findViewById(R.id.btnThongke);
+        btnStatistical.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, StatisticalActivity.class);
+                startActivity(intent);
+                // TODO Auto-generated method stub
+            }
+        });
     }
+
     @Override
     public void onNewIntent(Intent intent) {
         Bundle extras = intent.getExtras();
@@ -167,11 +179,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         this.finish();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -179,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
         editor = pref.edit();
         new GetParkingTask().execute((Void) null);
     }
+
     private void requestPermission(String permission) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, permission)) {
             Toast.makeText(MainActivity.this, "Phone state permission allows us to get phone number. Please allow it for additional functionality.",
@@ -186,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
         }
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission}, PERMISSION_REQUEST_CODE);
     }
+
     private boolean checkPermission(String permission) {
         if (Build.VERSION.SDK_INT >= 23) {
             int result = ContextCompat.checkSelfPermission(MainActivity.this, permission);
@@ -198,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -211,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+
     private String getPhone() {
         TelephonyManager phoneMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         if (ActivityCompat.checkSelfPermission(MainActivity.this, wantPermission) != PackageManager.PERMISSION_GRANTED) {
@@ -218,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return phoneMgr.getLine1Number();
     }
+
     public static boolean hasOpenedDialogs(FragmentActivity activity) {
         List<Fragment> fragments = activity.getSupportFragmentManager().getFragments();
         if (fragments != null) {
@@ -230,6 +249,7 @@ public class MainActivity extends AppCompatActivity {
 
         return false;
     }
+
     private void handleDataMessage(final JSONObject json, String action) {
         try {
             final String carID = json.getString("carID");
@@ -238,12 +258,7 @@ public class MainActivity extends AppCompatActivity {
             editor.commit();
 
             if (action.equals("order")) { // người dùng order => insert booking với status = 1
-                String message = json.getString("message");
-                if(message.equals("cancel")) {
-                    System.out.println("cancel");
-                }else {
-                    new SearchBookingTask("carID=" + carID, "order").execute((Void) null);
-                }
+                new SearchBookingTask("carID=" + carID, "order").execute((Void) null);
 //                        final BookingDTO b = new BookingDTO(0, Integer.parseInt(parkingID), Integer.parseInt(carID), "1", "", "", "", "", Double.parseDouble("0"));
             } else if (action.equals("checkin")) {
                 final String bookingID = json.getString("bookingID");
@@ -259,6 +274,7 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("Json Exception e : " + e.getMessage());
         }
     }
+
     class GetParkingTask extends AsyncTask<Void, Void, Boolean> {
 
         private JSONObject oneParking;
@@ -299,6 +315,7 @@ public class MainActivity extends AppCompatActivity {
 //            new ManagerBookingTask("get", getApplicationContext(), getWindow().getDecorView().getRootView(), parkingID, MainActivity.this, lv, null);
         }
     }
+
     private void setText(final TextView text, final String value) {
         runOnUiThread(new Runnable() {
             @Override
@@ -307,6 +324,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     class GetBookingTask extends AsyncTask<Void, Void, List> {
         ProgressDialog pdLoading;
         private final String txtSearch;
@@ -370,12 +388,13 @@ public class MainActivity extends AppCompatActivity {
 //            if (list != null && list.size() > 0) {
 //                System.out.println(list);
 
-                CarAdapter adapter = new CarAdapter(getWindow().getDecorView().getRootView(), MainActivity.this, list);
-                lv.setAdapter(adapter);
+            CarAdapter adapter = new CarAdapter(getWindow().getDecorView().getRootView(), MainActivity.this, list);
+            lv.setAdapter(adapter);
 //            }
 
         }
     }
+
     class CarAdapter extends BaseAdapter {
         private Context mContext;
         private List<BookingDTO> listGrade;
@@ -426,7 +445,7 @@ public class MainActivity extends AppCompatActivity {
                         String checkinTime = dateFormatter.format(calendar.getTime().getTime());
                         BookingDTO b = entry;
                         b.setStatus("2");
-                        b.setCarID(pref.getInt("carID",0));
+                        b.setCarID(pref.getInt("carID", 0));
                         b.setCheckinTime(checkinTime.toString());
                         new UpdateBookingTask(b).execute((Void) null);
 //                    btnAcept.setText("CHeckOut");
@@ -440,7 +459,7 @@ public class MainActivity extends AppCompatActivity {
                         // TODO Auto-generated method stub
                         BookingDTO b = entry;
                         b.setStatus("0");
-                        b.setCarID(pref.getInt("carID",0));
+                        b.setCarID(pref.getInt("carID", 0));
                         new UpdateBookingTask(b).execute((Void) null);
 //                    btnAcept.setText("CHeckOut");
                         onResume();
@@ -465,7 +484,7 @@ public class MainActivity extends AppCompatActivity {
 //                                        dialog.dismiss();
                                         BookingDTO b = entry;
                                         b.setStatus("3");
-                                        b.setCarID(pref.getInt("carID",0));
+                                        b.setCarID(pref.getInt("carID", 0));
                                         b.setCheckoutTime(checkoutTime.toString());
                                         new UpdateBookingTask(b).execute((Void) null);
                                         onResume();
@@ -486,8 +505,8 @@ public class MainActivity extends AppCompatActivity {
                             NumberFormat formatter = new DecimalFormat("###,###");
                             NumberFormat formatterHour = new DecimalFormat("0.00");
                             String totalPrice = formatter.format(diffInHours * entry.getPrice());
-                            if(diffInHours<1) {
-                                totalPrice = entry.getPrice() +"";
+                            if (diffInHours < 1) {
+                                totalPrice = entry.getPrice() + "";
                             }
                             builder.setMessage("\tHóa đơn checkout \n"
                                     + "Biển số :          " + entry.getLicensePlate() + "\n"
@@ -512,6 +531,7 @@ public class MainActivity extends AppCompatActivity {
             return convertView;
         }
     }
+
     class SearchBookingTask extends AsyncTask<Void, Void, List> {
 
         private JSONObject oneBooking;
@@ -594,13 +614,13 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (action.contains("order")) {
-                    createNotification("order","Có 1 Xe mới : " + pref.getString("licensePlate", "") + " muốn đặt chỗ");
+                    createNotification("order", "Có 1 Xe mới : " + pref.getString("licensePlate", "") + " muốn đặt chỗ");
                     createDialog("order");
                 } else if (action.contains("checkin")) {
-                    createNotification("checkin","Xe " + pref.getString("licensePlate", "") + " đã đến và muốn vào bãi");
+                    createNotification("checkin", "Xe " + pref.getString("licensePlate", "") + " đã đến và muốn vào bãi");
                     createDialog("checkin");
                 } else if (action.contains("checkout")) {
-                    createNotification("checkout","Xe " + pref.getString("licensePlate", "") + " muốn thanh toán");
+                    createNotification("checkout", "Xe " + pref.getString("licensePlate", "") + " muốn thanh toán");
                     createDialog("checkout");
 
 
@@ -610,6 +630,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     class CreateBookingTask extends AsyncTask<Void, Void, Boolean> {
         ProgressDialog pdLoading;
         BookingDTO b;
@@ -708,7 +729,7 @@ public class MainActivity extends AppCompatActivity {
                     formData.put("carID", b.getCarID());
                     formData.put("actioncheck", "checkin");
                     formData.put("actionspace", "Inc");
-                    currentBooking = (Integer.parseInt(currentBooking)+1) +"";
+                    currentBooking = (Integer.parseInt(currentBooking) + 1) + "";
                 } else if (b.getStatus().equals("3")) {
 //                    String checkoutTime = dateFormatter.format(calendar.getTime().getTime());
 //                    b.setCheckoutTime(checkoutTime);
@@ -716,8 +737,8 @@ public class MainActivity extends AppCompatActivity {
 //                    formData.put("carID", b.getCarID());
                     formData.put("actioncheck", "checkout");
                     formData.put("actionspace", "Desc");
-                    currentBooking = (Integer.parseInt(currentBooking)-1) +"";
-                } else if(b.getStatus().equals("0")) {
+                    currentBooking = (Integer.parseInt(currentBooking) - 1) + "";
+                } else if (b.getStatus().equals("0")) {
                     formData.put("actioncheck", "cancel");
                     httpHandler.post(Constants.API_URL + "booking/update_BookingInfor.php", formData.toString());
                     return false;
@@ -763,18 +784,19 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            if(aBoolean==null) {
+            if (aBoolean == null) {
                 pdLoading.dismiss();
                 onResume();
-            }else {
+            } else {
                 pdLoading.dismiss();
             }
         }
 
     }
+
     class UpdateBooingSpaceTask extends AsyncTask<Void, Void, Boolean> {
         ProgressDialog pdLoading;
-        String action,space;
+        String action, space;
         boolean success = false;
 
         public UpdateBooingSpaceTask(String space, String action) {
@@ -803,7 +825,7 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject formData = new JSONObject();
                 formData.put("actionspace", action);
                 formData.put("space", space);
-                formData.put("parkingID", pref.getInt("parkingID",0));
+                formData.put("parkingID", pref.getInt("parkingID", 0));
 //                formData.put("actionspace", "Inc");
                 System.out.println(formData.toString());
                 String json = httpHandler.post(Constants.API_URL + "booking/update_BookingSpace.php", formData.toString());
@@ -831,6 +853,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
     public static boolean isRunning(Context ctx) {
         ActivityManager activityManager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
 
@@ -842,18 +865,19 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
-    public void createNotification(String action,String title) {
+
+    public void createNotification(String action, String title) {
         Intent intent = new Intent(this, MainActivity.class);
 //        intent.putExtra("NotificationMessage", "order");
         if (isRunning(MainActivity.this)) {
             // App is running
         } else {
             // App is not running
-            if(action.equals("order")) {
+            if (action.equals("order")) {
                 intent.putExtra("NotificationMessage", "order");
-            }else if(action.equals("checkin")) {
+            } else if (action.equals("checkin")) {
                 intent.putExtra("NotificationMessage", "checkin");
-            }else if(action.equals("checkout")) {
+            } else if (action.equals("checkout")) {
                 intent.putExtra("NotificationMessage", "checkout");
             }
         }
@@ -886,7 +910,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void createDialog(String action) {
         if (action.equals("order")) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+            final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int choice) {
@@ -912,6 +937,20 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            channel.bind("CANCEL_FOR_OWNER", new SubscriptionEventListener() {
+                @Override
+                public void onEvent(String channelName, String eventName, final String data) {
+
+                    try {
+                        System.out.println("cancel order : " + data);
+                        JSONObject json = new JSONObject(data);
+                        System.out.println("cancel ");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
         } else if (action.equals("checkin")) {
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -922,10 +961,10 @@ public class MainActivity extends AppCompatActivity {
                             Calendar calendar = Calendar.getInstance();
                             DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             final String checkinTime = dateFormatter.format(calendar.getTime().getTime());
-                            editor.putString("checkinTime",checkinTime);
+                            editor.putString("checkinTime", checkinTime);
                             editor.putString("status", "2");
                             editor.commit();
-                            BookingDTO b = new BookingDTO(pref.getInt("bookingID", 0), pref.getInt("parkingID", 0), pref.getInt("carID", 0), pref.getString("status", ""), pref.getString("checkinTime",""), "", "", "", 5000);
+                            BookingDTO b = new BookingDTO(pref.getInt("bookingID", 0), pref.getInt("parkingID", 0), pref.getInt("carID", 0), pref.getString("status", ""), pref.getString("checkinTime", ""), "", "", "", 5000);
                             new UpdateBookingTask(b).execute((Void) null);
                             break;
                         case DialogInterface.BUTTON_NEGATIVE:
@@ -1017,6 +1056,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     public void changeSpaceButtonClick(View view) {
         LayoutInflater li = LayoutInflater.from(MainActivity.this);
         View promptsView = li.inflate(R.layout.change_space, null);
@@ -1036,18 +1076,18 @@ public class MainActivity extends AppCompatActivity {
                 .setCancelable(false)
                 .setPositiveButton("Đồng ý",
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 // get user input and set it to result
                                 // edit text
                                 System.out.println(userInput.getText().toString());
-                                new UpdateBooingSpaceTask(userInput.getText().toString(),"Manul").execute((Void)null);
+                                new UpdateBooingSpaceTask(userInput.getText().toString(), "Manul").execute((Void) null);
                                 onResume();
 //                                result.setText(userInput.getText());
                             }
                         })
                 .setNegativeButton("Hủy",
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
                         });
@@ -1058,9 +1098,9 @@ public class MainActivity extends AppCompatActivity {
         // show it
         alertDialog.show();
     }
+
     public void statisticalOnclick(View view) {
-        Intent intent = new Intent(MainActivity.this,StatisticalActivity.class);
-        this.startActivity(intent);
+
     }
 
 }
