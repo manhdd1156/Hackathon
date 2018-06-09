@@ -1,12 +1,12 @@
 package com.example.hung.fparkingowners;
 
-import android.content.Intent;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.content.Intent;
+import android.os.Handler;
 
 public class LoadFirstActivity extends AppCompatActivity {
-    private static int SPLASH_TIME_OUT = 4000;
+    private static int SPLASH_TIME_OUT = 2000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,5 +25,5 @@ public class LoadFirstActivity extends AppCompatActivity {
 
             }
         }, SPLASH_TIME_OUT);
- }
+    }
 }

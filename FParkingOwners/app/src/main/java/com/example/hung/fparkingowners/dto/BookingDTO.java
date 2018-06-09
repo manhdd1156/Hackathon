@@ -16,7 +16,15 @@ public class BookingDTO {
     }
 
     public BookingDTO(int bookingID, int parkingID, int carID, String status, String checkinTime, String checkoutTime, String licensePlate, String type, double price) {
-
+        this.bookingID = bookingID;
+        this.parkingID = parkingID;
+        this.carID = carID;
+        this.status = status;
+        this.checkinTime = checkinTime;
+        this.checkoutTime = checkoutTime;
+        this.licensePlate = licensePlate;
+        this.type = type;
+        this.price = price;
     }
 
     public int getBookingID() {

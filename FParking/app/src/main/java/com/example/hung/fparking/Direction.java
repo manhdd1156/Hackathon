@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +65,7 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
     private SharedPreferences.Editor sharedPreferenceEditor;
 
     Button buttonCheckin;
+    View mMapView;
     private boolean userGesture = false;
 
     CameraPosition cameraPosition;
@@ -85,13 +87,26 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
                 startActivity(intent);
             }
         });
+
+
+        mMapView = mapFragment.getView();
+        View locationButton = ((View) mMapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+        // position on right bottom
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
+        rlp.setMargins(0, 1000, 0, 0);
+
+        // Gọi Listener Changed Location
         callLocationChangedListener();
-//        sendRequest();
+
+        // Gửi yêu cầu chỉ đường
+        sendRequest();
     }
 
     private void callLocationChangedListener() {
         try {
-            locationManager = (LocationManager) getApplication().getSystemService(Context.LOCATION_SERVICE);
+            locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, this);
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,11 +129,15 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         GPSTracker gps = new GPSTracker(this);
         String directionLat = sharedPreferences.getString("parkingLat", "");
         String directionLng = sharedPreferences.getString("parkingLng", "");
+<<<<<<< HEAD
         Log.e("TOA DO DIEM DEN: ",directionLat+"---"+directionLng);
 
+=======
+//        Log.e("directionLat in Dirction", "" + directionLat);
+>>>>>>> 88305cfe7332a2cbba71907b6bd57f8e5ef76d0c
         String ori = directionLat + "," + directionLng;
         try {
-            new DirectionFinder(this, gps.getLatitude() + "," + gps.getLongitude(), "21.007423,105.792855").execute();
+            new DirectionFinder(this, gps.getLatitude() + "," + gps.getLongitude(), directionLat+","+directionLng).execute();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -228,7 +247,7 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.e("Direction class onLocationChanged: ", "location changed");
+//        Log.e("Direction class onLocationChanged: ", "location changed");
         if (!userGesture) {
             cameraPosition = new CameraPosition.Builder()
                     .target(new LatLng(location.getLatitude(), location.getLongitude()))             // Sets the center of the map to current location
@@ -244,7 +263,7 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         distination.setLongitude(location.getLongitude());
         double distanceValue = distination.distanceTo(location);
         if (distanceValue <= 15) {
-            Log.e("Check in:", "ok");
+//            Log.e("Check in:", "ok");
             createNotification("Fparking");
         }
     }
