@@ -1,9 +1,11 @@
 package com.example.hung.fparking;
 
+import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -26,7 +28,7 @@ import java.util.ArrayList;
 import Service.HttpHandler;
 
 public class OrderParking extends AppCompatActivity {
-
+    boolean check = true;
     double selectPlaceLat = 0;
     double selectPlaceLng = 0;
     String strJSON;
@@ -54,6 +56,7 @@ public class OrderParking extends AppCompatActivity {
         textViewPrice = findViewById(R.id.textViewPrice);
         textViewTime = findViewById(R.id.textViewTime);
         buttonDat_Cho = findViewById(R.id.buttonDat_Cho_Ngay);
+
 
         buttonDat_Cho.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,6 +138,14 @@ public class OrderParking extends AppCompatActivity {
             textViewPrice.setText(price + "");
             textViewTime.setText(time);
             textViewAddress.setText(address);
+            if (totalSlot - currentSpace == 0) {
+                buttonDat_Cho.setBackgroundColor(R.drawable.button_overload);
+                buttonDat_Cho.setEnabled(false);
+                AlertDialog.Builder builderCaution = new AlertDialog.Builder(OrderParking.this);
+                builderCaution.setMessage("Bãi xe hết chỗ. Vui lòng chọn bãi đỗ khác!").show();
+            }
+
+
         }
 
     }
