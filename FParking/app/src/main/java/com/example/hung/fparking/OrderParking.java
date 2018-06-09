@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -50,6 +51,7 @@ public class OrderParking extends AppCompatActivity {
     private SharedPreferences.Editor sharedPreferenceEditor;
 
     ProgressDialog proD;
+    AlertDialog.Builder builder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +65,10 @@ public class OrderParking extends AppCompatActivity {
         textViewPrice = findViewById(R.id.textViewPrice);
         textViewTime = findViewById(R.id.textViewTime);
         buttonDat_Cho = findViewById(R.id.buttonDat_Cho_Ngay);
-        proD =new ProgressDialog(OrderParking.this);
+
+        proD = new ProgressDialog(OrderParking.this);
+        builder = new AlertDialog.Builder(OrderParking.this);
+
         sharedPreferences = getSharedPreferences("driver", 0);
         sharedPreferenceEditor = sharedPreferences.edit();
 
@@ -80,7 +85,46 @@ public class OrderParking extends AppCompatActivity {
                     sharedPreferenceEditor.putString("parkingLat", parkingLatitde + "");
                     sharedPreferenceEditor.putString("parkingLng", parkinglongitude + "");
                     sharedPreferenceEditor.commit();
-                    new pushToOwner("2", "order", proD).execute((Void) null);
+
+                    proD.setCancelable(false);
+                    proD.show();
+
+                    new CountDownTimer(15000, 1000) {
+                        boolean checkOwer = true;
+
+                        public void onTick(long millisUntilFinished) {
+                            proD.setMessage("\tĐang đợi chủ xe xác nhận ... " + millisUntilFinished / 1000);
+                            if (checkOwer) {
+                                new pushToOwner("2", "order").execute((Void) null);
+                                checkOwer = false;
+                            }
+                        }
+
+                        public void onFinish() {
+
+                            new pushToOwnerOverTime("2", "cancel").execute((Void) null);
+                            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int choice) {
+                                    switch (choice) {
+                                        case DialogInterface.BUTTON_POSITIVE:
+
+                                            break;
+                                        case DialogInterface.BUTTON_NEGATIVE:
+
+                                            break;
+                                    }
+                                }
+                            };
+                            try {
+                                proD.dismiss();
+                                builder.setMessage("Chủ bãi đỗ đang bận!")
+                                        .setPositiveButton("Chấp Nhận", dialogClickListener).setCancelable(false).show();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }.start();
                 } else if (!bookID.equals("") && !sharedPreferences.getString("parkingLat", "").equals("")) {
                     buttonDat_Cho.setText("CHỈ ĐƯỜNG");
                     Intent intent = new Intent(OrderParking.this, Direction.class);
@@ -102,8 +146,8 @@ public class OrderParking extends AppCompatActivity {
                         }
                     };
                     try {
-                        builder.setMessage("Bạn đang đặt chỗ tại bãi xe: ")
-                                .setPositiveButton("Có", dialogClickListener).setCancelable(false).show();
+                        builder.setMessage("Bạn đang đặt chỗ tại bãi xe khác")
+                                .setPositiveButton("Chấp Nhận", dialogClickListener).setCancelable(false).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -192,14 +236,13 @@ public class OrderParking extends AppCompatActivity {
     }
 
     class pushToOwner extends AsyncTask<Void, Void, Boolean> {
-        ProgressDialog pdLoading;
+
         boolean success = false;
         String action, carID;
 
-        public pushToOwner(String carID, String action, ProgressDialog p) {
+        public pushToOwner(String carID, String action) {
             this.action = action;
             this.carID = carID;
-            pdLoading = p;
         }
 
         @Override
@@ -207,9 +250,7 @@ public class OrderParking extends AppCompatActivity {
             super.onPreExecute();
 
             //this method will be running on UI thread
-            pdLoading.setMessage("\tĐợi xíu...");
-            pdLoading.setCancelable(false);
-            pdLoading.show();
+
 
         }
 
@@ -237,7 +278,6 @@ public class OrderParking extends AppCompatActivity {
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
             if (aBoolean == null) {
-//                pdLoading.dismiss();
                 onResume();
             } else {
             }
@@ -245,4 +285,59 @@ public class OrderParking extends AppCompatActivity {
 
     }
 
+    class pushToOwnerOverTime extends AsyncTask<Void, Void, Boolean> {
+
+        boolean success = false;
+        String action, carID;
+
+        public pushToOwnerOverTime(String carID, String action) {
+            this.action = action;
+            this.carID = carID;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //this method will be running on UI thread
+
+
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            HttpHandler httpHandler = new HttpHandler();
+            try {
+                JSONObject formData = new JSONObject();
+                formData.put("carID", carID);
+                formData.put("action", action);
+                String json = httpHandler.post(Constants.API_URL + "driver/booking.php", formData.toString());
+                JSONObject jsonObj = new JSONObject(json);
+                if (jsonObj.getInt("size") > 0) {
+                    success = true;
+                }
+
+            } catch (Exception ex) {
+                Log.e("Error:", ex.getMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if (aBoolean == null) {
+                onResume();
+            } else {
+            }
+        }
+
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        proD.dismiss();
+    }
 }

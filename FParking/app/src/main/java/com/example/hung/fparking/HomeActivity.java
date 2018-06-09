@@ -244,10 +244,12 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         if (!userAction) {
             mMap.clear();
             check = 1;
+
             searchPlaceLat = location.getLatitude();
             searchPlaceLng = location.getLongitude();
 
             new GetNearPlace().execute();
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
         }
     }
 
@@ -328,9 +330,14 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             if (nearParkingList.size() > 0) {
                 for (int i = 0; i < nearParkingList.size(); i++) {
                     LatLng latLng = new LatLng(nearParkingList.get(i).getLattitude(), nearParkingList.get(i).getLongitude());
-                    if (sharedPreferences.getString("parkingLat", "").equals(nearParkingList.get(i).getLattitude() + "") && sharedPreferences.getString("parkingLng", "").equals(nearParkingList.get(i).getLongitude() + "")) {
-                        mMap.addMarker(new MarkerOptions()
-                                .position(latLng).icon(BitmapDescriptorFactory.fromBitmap(parkMarker)));
+                    if (!sharedPreferences.getString("bookingID", "").equals("")) {
+                        if (sharedPreferences.getString("parkingLat", "").equals(nearParkingList.get(i).getLattitude() + "") && sharedPreferences.getString("parkingLng", "").equals(nearParkingList.get(i).getLongitude() + "")) {
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(latLng).icon(BitmapDescriptorFactory.fromBitmap(parkMarker)));
+                        } else {
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(latLng).icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
+                        }
                     } else {
                         mMap.addMarker(new MarkerOptions()
                                 .position(latLng).icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
@@ -348,5 +355,6 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onResume() {
         super.onResume();
+        userAction = false;
     }
 }

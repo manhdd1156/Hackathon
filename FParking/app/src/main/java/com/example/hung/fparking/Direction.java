@@ -69,7 +69,7 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor sharedPreferenceEditor;
 
-    Button buttonCheckin;
+    Button buttonCheckin, buttonHuy;
     View mMapView;
     private boolean userGesture = false;
 
@@ -90,6 +90,7 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         String bookID = sharedPreferences.getString("bookingID", "");
 
         buttonCheckin = (Button) findViewById(R.id.buttonCheckin);
+        buttonHuy = (Button) findViewById(R.id.buttonHuy);
 
         buttonCheckin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +101,13 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
             }
         });
 
+        buttonHuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                locationManager.removeUpdates(Direction.this);
+                new pushToOwner("2", "cancel", sharedPreferences.getString("bookingID", "")).execute((Void) null);
+            }
+        });
 
         mMapView = mapFragment.getView();
         View locationButton = ((View) mMapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
@@ -285,8 +293,8 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         distination.setLatitude(Double.parseDouble(sharedPreferences.getString("parkingLat", "")));
         distination.setLongitude(Double.parseDouble(sharedPreferences.getString("parkingLng", "")));
         double distanceValue = distination.distanceTo(location);
-        if (distanceValue <= 15) {
-//            Log.e("Check in:", "ok");
+        if (distanceValue <= 40) {
+
             createNotification("Fparking");
         }
     }

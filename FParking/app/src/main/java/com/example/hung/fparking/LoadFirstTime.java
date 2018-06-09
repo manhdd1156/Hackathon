@@ -34,7 +34,7 @@ public class LoadFirstTime extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("driver", 0);
 //        int parkingID = 0;
         sharedPreferencesEditor = sharedPreferences.edit();
-        sharedPreferencesEditor.clear().commit();
+//        sharedPreferencesEditor.clear().commit();
         Log.e("Cái này chạy kinh qua","aaaaaaaaaa");
 //        sharedPreferencesEditor.putInt("parkingID", parkingID);
         sharedPreferencesEditor.commit();
