@@ -1,13 +1,11 @@
 package com.example.hung.fparkingowners;
 
-import android.Manifest;
 import android.app.NotificationChannel;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -17,7 +15,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -25,9 +22,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,9 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,7 +52,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.PrivateKey;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -69,7 +60,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -382,7 +372,7 @@ public class MainActivity extends AppCompatActivity {
             Button btnCancel = (Button) convertView.findViewById(R.id.btnCancel);
 
             if (entry.getStatus().equals("1")) {
-                btnAcept.setText("CheckIn");
+                btnAcept.setText("VÀO BÃI");
                 btnAcept.setOnClickListener(new View.OnClickListener() {
 
                     @Override
@@ -399,9 +389,21 @@ public class MainActivity extends AppCompatActivity {
                         onResume();
                     }
                 });
+                btnCancel.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View arg0) {
+                        // TODO Auto-generated method stub
+                        BookingDTO b = entry;
+                        b.setStatus("0");
+                        new UpdateBookingTask(b).execute((Void) null);
+//                    btnAcept.setText("CHeckOut");
+                        onResume();
+                    }
+                });
             } else if (entry.getStatus().equals("2")) {
                 btnCancel.setVisibility(convertView.INVISIBLE);
-                btnAcept.setText("CheckOut");
+                btnAcept.setText("THANH TOÁN");
                 btnAcept.setOnClickListener(new View.OnClickListener() {
 
                     @Override
@@ -421,9 +423,9 @@ public class MainActivity extends AppCompatActivity {
                                         b.setCheckoutTime(checkoutTime.toString());
                                         new UpdateBookingTask(b).execute((Void) null);
                                         onResume();
-
                                         break;
                                     case DialogInterface.BUTTON_NEGATIVE:
+
                                         break;
                                 }
                             }
@@ -447,7 +449,7 @@ public class MainActivity extends AppCompatActivity {
                                     + "thời gian đỗ :  " + formatterHour.format(diffInHours) + " giờ \n"
                                     + "tổng giá :        " + formatter.format(diffInHours * entry.getPrice()) + "vnđ")
                                     .setPositiveButton("Yes", dialogClickListener)
-                                    .setNegativeButton("No", dialogClickListener).show();
+                                    .setNegativeButton("No", dialogClickListener).setCancelable(false).show();
 
                         } catch (ParseException e) {
                             e.printStackTrace();
@@ -557,6 +559,9 @@ public class MainActivity extends AppCompatActivity {
 
                                     break;
                                 case DialogInterface.BUTTON_NEGATIVE:
+                                    BookingDTO bb = new BookingDTO(pref.getInt("bookingID", 0), pref.getInt("parkingID", 0), pref.getInt("carID", 0), "0", "", "", "", "", 5000);
+                                    new UpdateBookingTask(bb).execute((Void) null);
+
                                     break;
                             }
                         }
@@ -564,7 +569,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         builder.setMessage("Xe " + pref.getString("licensePlate", "") + "muốn đỗ xe trong bãi bạn có đồng ý không")
                                 .setPositiveButton("Có", dialogClickListener)
-                                .setNegativeButton("Không", dialogClickListener).show();
+                                .setNegativeButton("Không", dialogClickListener).setCancelable(false).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -688,6 +693,11 @@ public class MainActivity extends AppCompatActivity {
                     formData.put("actioncheck", "checkout");
                     formData.put("actionspace", "Desc");
                 }
+                else if(b.getStatus().equals("0")) {
+                    formData.put("actioncheck", "cancel");
+                    httpHandler.post(Constants.API_URL + "booking/update_BookingInfor.php", formData.toString());
+                    return false;
+                }
                 formData.put("carID", b.getCarID());
                 formData.put("licensePlate", b.getLicensePlate());
                 formData.put("type", b.getTypeCar());
@@ -712,12 +722,11 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(formData.toString());
                 String json = httpHandler.post(Constants.API_URL + "booking/update_BookingInfor.php", formData.toString());
                 formData.put("parkingID", pref.getInt("parkingID", 3));
-                String json1 = httpHandler.post(Constants.API_URL + "booking/update_BookingSpace.php", formData.toString());
+                httpHandler.post(Constants.API_URL + "booking/update_BookingSpace.php", formData.toString());
                 System.out.println("=============================");
                 System.out.println(json);
                 System.out.println("=============================");
                 JSONObject jsonObj = new JSONObject(json);
-                JSONObject jsonObj1 = new JSONObject(json1);
                 if (jsonObj.getInt("size") > 0) {
                     success = true;
                 }
@@ -731,8 +740,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            pdLoading.dismiss();
-            onResume();
+            if(aBoolean==null) {
+                pdLoading.dismiss();
+                onResume();
+            }else {
+                pdLoading.dismiss();
+            }
         }
 
     }
@@ -762,14 +775,14 @@ public class MainActivity extends AppCompatActivity {
         notificationBuilder.setAutoCancel(true)
 //                .setDefaults(Notification.DE)
                 .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.apply)
+                .setSmallIcon(R.drawable.ic_launcher_round)
                 .setTicker("Hearty365")
                 .setPriority(3)
                 .setContentTitle("Default notification")
                 .setContentText("Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
                 .setContentInfo("Info")
-                .addAction(R.drawable.apply, "Đồng ý", pIntent)
-                .addAction(R.drawable.apply, "Hủy", pIntent);
+                .addAction(R.drawable.ic_launcher_round, "Đồng ý", pIntent)
+                .addAction(R.drawable.ic_launcher_round, "Hủy", pIntent);
         try {
             Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
@@ -797,6 +810,8 @@ public class MainActivity extends AppCompatActivity {
                             new UpdateBookingTask(b).execute((Void) null);
                             break;
                         case DialogInterface.BUTTON_NEGATIVE:
+                            BookingDTO bb = new BookingDTO(pref.getInt("bookingID", 0), pref.getInt("parkingID", 0), pref.getInt("carID", 0), "0", "", "", "", "", 5000);
+                            new UpdateBookingTask(bb).execute((Void) null);
                             break;
                     }
                 }
@@ -805,7 +820,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 builder.setMessage("Xe " + pref.getString("licensePlate", "") + "muốn checkin bạn có đồng ý không")
                         .setPositiveButton("Có", dialogClickListener)
-                        .setNegativeButton("Không", dialogClickListener).show();
+                        .setNegativeButton("Không", dialogClickListener).setCancelable(false).show();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -834,6 +849,8 @@ public class MainActivity extends AppCompatActivity {
 //                                            new ManagerBookingTask("update", getApplicationContext(), getWindow().getDecorView().getRootView(), parkingID, MainActivity.this, lv, bookingDTO);
                                             break;
                                         case DialogInterface.BUTTON_NEGATIVE:
+                                            BookingDTO bb = new BookingDTO(pref.getInt("bookingID", 0), pref.getInt("parkingID", 0), pref.getInt("carID", 0), "0", "", "", "", "", 5000);
+                                            new UpdateBookingTask(bb).execute((Void) null);
                                             break;
                                     }
                                 }
@@ -856,13 +873,15 @@ public class MainActivity extends AppCompatActivity {
                                         + "thời gian đỗ :  " + formatterHour.format(diffInHours) + " giờ \n"
                                         + "tổng giá :        " + formatter.format(diffInHours * Double.parseDouble(pref.getString("price", ""))) + "vnđ")
                                         .setPositiveButton("Yes", dialogClickListener2)
-                                        .setNegativeButton("No", dialogClickListener2).show();
+                                        .setNegativeButton("No", dialogClickListener2).setCancelable(false).show();
 
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
                             break;
                         case DialogInterface.BUTTON_NEGATIVE:
+                            BookingDTO bb = new BookingDTO(pref.getInt("bookingID", 0), pref.getInt("parkingID", 0), pref.getInt("carID", 0), "0", "", "", "", "", 5000);
+                            new UpdateBookingTask(bb).execute((Void) null);
                             break;
                     }
                 }
@@ -872,7 +891,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 builder.setMessage("Xe " + pref.getString("licensePlate", "") + "muốn checkout bạn có đồng ý không")
                         .setPositiveButton("Có", dialogClickListener)
-                        .setNegativeButton("Không", dialogClickListener).create();
+                        .setNegativeButton("Không", dialogClickListener).setCancelable(false).show();
 
             } catch (Exception e) {
                 e.printStackTrace();

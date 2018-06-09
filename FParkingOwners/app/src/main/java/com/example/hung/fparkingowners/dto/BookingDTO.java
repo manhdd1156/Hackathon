@@ -8,14 +8,14 @@ public class BookingDTO {
     private String checkinTime;
     private String checkoutTime;
     private String licensePlate;
-    private String type;
+    private String typeCar;
     private double price;
 
     public BookingDTO() {
 
     }
 
-    public BookingDTO(int bookingID, int parkingID, int carID, String status, String checkinTime, String checkoutTime, String licensePlate, String type, double price) {
+    public BookingDTO(int bookingID, int parkingID, int carID, String status, String checkinTime, String checkoutTime, String licensePlate, String typeCar, double price) {
         this.bookingID = bookingID;
         this.parkingID = parkingID;
         this.carID = carID;
@@ -23,7 +23,7 @@ public class BookingDTO {
         this.checkinTime = checkinTime;
         this.checkoutTime = checkoutTime;
         this.licensePlate = licensePlate;
-        this.type = type;
+        this.typeCar = typeCar;
         this.price = price;
     }
 
@@ -56,7 +56,7 @@ public class BookingDTO {
     }
 
     public String getTypeCar() {
-        return type;
+        return typeCar;
     }
 
     public double getPrice() {
@@ -92,7 +92,7 @@ public class BookingDTO {
     }
 
     public void setTypeCar(String type) {
-        this.type = type;
+        this.typeCar = typeCar;
     }
 
     public void setPrice(double price) {

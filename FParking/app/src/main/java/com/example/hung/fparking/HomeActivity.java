@@ -82,10 +82,6 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         rlp.setMargins(0, 1500, 0, 0);
 
         new GetNearPlace().execute();
-
-        // Goi Listener thay doi vi tri
-        callLocationChangedListener();
-
     }
 
 
@@ -98,8 +94,6 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         }
         mMap.setMyLocationEnabled(true);
 
-        GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), 15));
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -118,8 +112,25 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                check = 1;
+                GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
+                searchPlaceLat = gpsTracker.getLatitude();
+                searchPlaceLng = gpsTracker.getLongitude();
+                new GetNearPlace().execute();
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(searchPlaceLat, searchPlaceLng), 15));
+                return false;
+            }
+        });
+        GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), 15));
+
+
         // Gọi Listener của movecamera
         mMap.setOnCameraMoveStartedListener(this);
+        callLocationChangedListener();
     }
 
     public void searchPlace() {
@@ -169,6 +180,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onCameraMoveStarted(int i) {
+<<<<<<< HEAD
 //
 ////        LatLng cameraLatLng = ;
 ////        String[] locaton = getLat_lng(cameraLatLng.toString());
@@ -179,6 +191,15 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 ////        selectPlaceLat = Double.parseDouble(locaton[0]);
 ////        selectPlaceLng = Double.parseDouble(locaton[1]);
 //        new GetNearPlace().execute();
+=======
+        mMap.clear();
+        check = 1;
+        LatLng cameraLatLng = mMap.getCameraPosition().target;
+        String[] locaton = getLat_lng(cameraLatLng.toString());
+        searchPlaceLng = Double.parseDouble(locaton[0]);
+        searchPlaceLng = Double.parseDouble(locaton[1]);
+        new GetNearPlace().execute();
+>>>>>>> ace18d562b6984b9d84a40409f4865ba7f01cf8d
 
     }
 
@@ -193,10 +214,10 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onLocationChanged(Location location) {
+        mMap.clear();
         check = 1;
         selectPlaceLng = location.getLatitude();
-        searchPlaceLng = location.getLatitude();
-        Log.e("Location change: ", location.getLatitude() + "");
+        searchPlaceLng = location.getLongitude();
 
         new GetNearPlace().execute();
     }
@@ -232,7 +253,6 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 selectPlaceLat = searchPlaceLat;
                 selectPlaceLng = searchPlaceLng;
             }
-            Log.e("GetNearPlace:", "O day");
             strJSON = httpHandler.getrequiement("https://fparking.net/realtimeTest/driver/get_near_my_location.php?latitude=" + selectPlaceLat + "&" + "longitude=" + selectPlaceLng);
             Log.e("SQL:", strJSON.toString());
             if (strJSON != null) {
