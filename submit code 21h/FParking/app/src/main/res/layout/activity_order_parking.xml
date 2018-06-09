@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".OrderParking">
+
+    <FrameLayout
+        android:id="@+id/fragmentOrder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="189dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background">
+
+
+            <ImageView
+                android:id="@+id/imageViewParking"
+                android:layout_width="match_parent"
+                android:layout_height="192dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="#009dff"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/parking" />
+
+            <Button
+                android:id="@+id/buttonDat_Cho_Ngay"
+                android:layout_width="332dp"
+                android:layout_height="51dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/button_selector"
+                android:text="ĐẶT CHỖ NGAY"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/buttonDat_Cho_Ngay"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="166dp"
+                android:text="234 Trần Duy Hưng"
+                android:textColor="@color/whitetext" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/imageViewParking"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/slot" />
+
+            <TextView
+                android:id="@+id/textViewEmptySpace"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/imageViewParking"
+                android:layout_marginStart="29dp"
+                android:text="NA"
+                android:textColor="@color/white_greyish"
+                android:textSize="45sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewSlots"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/textViewEmptySpace"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="87dp"
+                android:text="NA"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="match_parent"
+                android:layout_height="39dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="263dp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/info" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewEmptySpace"
+                android:layout_centerHorizontal="true"
+                android:paddingTop="20dp"
+                android:text="Thông tin chi tiết" />
+
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/imageView4"
+                android:layout_marginTop="3dp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/info" />
+
+            <TextView
+                android:id="@+id/textViewPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/imageView4"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="13dp"
+                android:drawableLeft="@drawable/ic_action_money"
+                android:gravity="center_vertical"
+                android:text="N/A" />
+
+
+            <TextView
+                android:id="@+id/textViewTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/imageView4"
+                android:layout_marginEnd="44dp"
+                android:layout_marginTop="13dp"
+                android:drawableLeft="@drawable/ic_action_time"
+                android:gravity="center_vertical"
+                android:text="N/A" />
+
+
+        </RelativeLayout>
+
+    </FrameLayout>
+</android.support.constraint.ConstraintLayout>
