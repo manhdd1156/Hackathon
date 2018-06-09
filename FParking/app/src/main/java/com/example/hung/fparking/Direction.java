@@ -92,14 +92,16 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         mMapView = mapFragment.getView();
         View locationButton = ((View) mMapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
         RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
-// position on right bottom
+        // position on right bottom
         rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
         rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
         rlp.setMargins(0, 1000, 0, 0);
 
         // Gọi Listener Changed Location
         callLocationChangedListener();
-//        sendRequest();
+
+        // Gửi yêu cầu chỉ đường
+        sendRequest();
     }
 
     private void callLocationChangedListener() {
@@ -127,10 +129,10 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         GPSTracker gps = new GPSTracker(this);
         String directionLat = sharedPreferences.getString("parkingLat", "");
         String directionLng = sharedPreferences.getString("parkingLng", "");
-
+//        Log.e("directionLat in Dirction", "" + directionLat);
         String ori = directionLat + "," + directionLng;
         try {
-            new DirectionFinder(this, gps.getLatitude() + "," + gps.getLongitude(), "21.007423,105.792855").execute();
+            new DirectionFinder(this, gps.getLatitude() + "," + gps.getLongitude(), directionLat+","+directionLng).execute();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -240,7 +242,7 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.e("Direction class onLocationChanged: ", "location changed");
+//        Log.e("Direction class onLocationChanged: ", "location changed");
         if (!userGesture) {
             cameraPosition = new CameraPosition.Builder()
                     .target(new LatLng(location.getLatitude(), location.getLongitude()))             // Sets the center of the map to current location
@@ -256,7 +258,7 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         distination.setLongitude(location.getLongitude());
         double distanceValue = distination.distanceTo(location);
         if (distanceValue <= 15) {
-            Log.e("Check in:", "ok");
+//            Log.e("Check in:", "ok");
             createNotification("Fparking");
         }
     }
