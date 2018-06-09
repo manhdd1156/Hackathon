@@ -38,6 +38,7 @@ public class DirectionFinder {
         new DownloadRawData().execute(createUrl());
     }
 
+    // Tạo URL
     private String createUrl() throws UnsupportedEncodingException {
         String urlOrigin = URLEncoder.encode(origin, "utf-8");
         String urlDestination = URLEncoder.encode(destination, "utf-8");
@@ -45,6 +46,7 @@ public class DirectionFinder {
         return Direction_Url + "origin=" + urlOrigin + "&destination=" + urlDestination + "&key=" + Google_API_Key;
     }
 
+    // Download Data từ Google Dirction API
     private class DownloadRawData extends AsyncTask<String, Void, String> {
 
         @Override
@@ -81,6 +83,7 @@ public class DirectionFinder {
         }
     }
 
+    // Đọc Google Direction JSon
     private void parseJSon(String data) throws JSONException {
         if (data == null)
             return;
@@ -114,6 +117,7 @@ public class DirectionFinder {
         listener.onDirectionFinderSuccess(routes);
     }
 
+    // Decode polyline Google
     private List<LatLng> decodePolyLine(final String poly) {
         int len = poly.length();
         int index = 0;
