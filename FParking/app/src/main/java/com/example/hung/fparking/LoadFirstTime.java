@@ -8,7 +8,7 @@ import android.os.Bundle;
 
 
 public class LoadFirstTime extends AppCompatActivity{
-    private static int SPLASH_TIME_OUT = 4000;
+    private static int SPLASH_TIME_OUT = 5000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,7 +20,7 @@ public void splash(){
     new Handler().postDelayed(new Runnable() {
         @Override
         public void run() {
-            Intent homeIntent = new Intent(LoadFirstTime.this,CheckOut.class);
+            Intent homeIntent = new Intent(LoadFirstTime.this,HomeActivity.class);
             startActivity(homeIntent);
             finish();
         }
