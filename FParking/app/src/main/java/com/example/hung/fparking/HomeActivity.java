@@ -328,10 +328,10 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             if (nearParkingList.size() > 0) {
                 for (int i = 0; i < nearParkingList.size(); i++) {
                     LatLng latLng = new LatLng(nearParkingList.get(i).getLattitude(), nearParkingList.get(i).getLongitude());
-                    if (sharedPreferences.getString("parkingLat", "").equals(nearParkingList.get(i).getLattitude()+"") && sharedPreferences.getString("parkingLng", "").equals(nearParkingList.get(i).getLongitude()+"")) {
+                    if (sharedPreferences.getString("parkingLat", "").equals(nearParkingList.get(i).getLattitude() + "") && sharedPreferences.getString("parkingLng", "").equals(nearParkingList.get(i).getLongitude() + "")) {
                         mMap.addMarker(new MarkerOptions()
                                 .position(latLng).icon(BitmapDescriptorFactory.fromBitmap(parkMarker)));
-                    }else {
+                    } else {
                         mMap.addMarker(new MarkerOptions()
                                 .position(latLng).icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
                     }
@@ -343,5 +343,10 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     public String[] getLat_lng(String location) {
         String[] latlng = location.substring(location.indexOf("(") + 1, location.indexOf(")")).split(",");
         return latlng;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }

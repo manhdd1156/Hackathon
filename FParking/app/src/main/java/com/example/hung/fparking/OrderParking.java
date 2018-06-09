@@ -49,6 +49,8 @@ public class OrderParking extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor sharedPreferenceEditor;
 
+    ProgressDialog proD;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +63,7 @@ public class OrderParking extends AppCompatActivity {
         textViewPrice = findViewById(R.id.textViewPrice);
         textViewTime = findViewById(R.id.textViewTime);
         buttonDat_Cho = findViewById(R.id.buttonDat_Cho_Ngay);
-
+        proD =new ProgressDialog(OrderParking.this);
         sharedPreferences = getSharedPreferences("driver", 0);
         sharedPreferenceEditor = sharedPreferences.edit();
 
@@ -78,7 +80,7 @@ public class OrderParking extends AppCompatActivity {
                     sharedPreferenceEditor.putString("parkingLat", parkingLatitde + "");
                     sharedPreferenceEditor.putString("parkingLng", parkinglongitude + "");
                     sharedPreferenceEditor.commit();
-                    new pushToOwner("2", "order").execute((Void) null);
+                    new pushToOwner("2", "order", proD).execute((Void) null);
                 } else if (!bookID.equals("") && !sharedPreferences.getString("parkingLat", "").equals("")) {
                     buttonDat_Cho.setText("CHỈ ĐƯỜNG");
                     Intent intent = new Intent(OrderParking.this, Direction.class);
@@ -194,10 +196,10 @@ public class OrderParking extends AppCompatActivity {
         boolean success = false;
         String action, carID;
 
-        public pushToOwner(String carID, String action) {
+        public pushToOwner(String carID, String action, ProgressDialog p) {
             this.action = action;
             this.carID = carID;
-            pdLoading = new ProgressDialog(OrderParking.this);
+            pdLoading = p;
         }
 
         @Override
@@ -235,10 +237,9 @@ public class OrderParking extends AppCompatActivity {
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
             if (aBoolean == null) {
-                pdLoading.dismiss();
+//                pdLoading.dismiss();
                 onResume();
             } else {
-                pdLoading.dismiss();
             }
         }
 
