@@ -1,5 +1,6 @@
 package com.example.hung.fparking;
 
+import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -9,6 +10,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import Model.GPSTracker;
 
 public class Direction extends FragmentActivity implements OnMapReadyCallback {
 
@@ -42,5 +45,8 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback {
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        GPSTracker gps = new GPSTracker(this);
+        Location  mLocation = gps.getLocation();
+        mMap.addMarker(new MarkerOptions().position(new LatLng(mLocation.getLatitude(), mLocation.getLongitude())).title("Marker in Sydney"));
     }
 }
