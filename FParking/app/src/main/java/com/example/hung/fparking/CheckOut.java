@@ -56,7 +56,7 @@ public class CheckOut extends AppCompatActivity {
 
 //            Log.e("GetNearPlace:", "O day");
             strJSON = httpHandler.getrequiement("https://fparking.net/realtimeTest/driver/get_CheckOut_Detail.php?bookingID=143");
-            Log.e("SQL Detail:", strJSON.toString());
+//            Log.e("SQL Detail:", strJSON.toString());
 
             if (strJSON != null) {
 
