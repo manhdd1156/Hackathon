@@ -60,6 +60,8 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     View mMapView;
     private LocationManager locationManager = null;
 
+    boolean userAction = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +84,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         rlp.setMargins(0, 1500, 0, 0);
 
         new GetNearPlace().execute();
+
     }
 
 
@@ -116,6 +119,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public boolean onMyLocationButtonClick() {
                 check = 1;
+                userAction = false;
                 GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
                 searchPlaceLat = gpsTracker.getLatitude();
                 searchPlaceLng = gpsTracker.getLongitude();
@@ -154,6 +158,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngMaker, 15));
 
                 check = 1;
+                userAction = true;
                 String[] latlng = getLat_lng(latLngMaker.toString());
                 searchPlaceLat = Double.parseDouble(latlng[0]);
                 searchPlaceLng = Double.parseDouble(latlng[1]);
@@ -183,6 +188,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.clear();
         check = 1;
+        userAction = true;
         LatLng cameraLatLng = mMap.getCameraPosition().target;
         String[] locaton = getLat_lng(cameraLatLng.toString());
         searchPlaceLng = Double.parseDouble(locaton[0]);
@@ -202,12 +208,14 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onLocationChanged(Location location) {
-        mMap.clear();
-        check = 1;
-        selectPlaceLng = location.getLatitude();
-        searchPlaceLng = location.getLongitude();
+        if (!userAction) {
+            mMap.clear();
+//        check = 1;
+            searchPlaceLat = location.getLatitude();
+            searchPlaceLng = location.getLongitude();
 
-        new GetNearPlace().execute();
+            new GetNearPlace().execute();
+        }
     }
 
     @Override
