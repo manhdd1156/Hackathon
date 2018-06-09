@@ -13,20 +13,6 @@
         tools:layout_editor_absoluteX="103dp"
         tools:layout_editor_absoluteY="0dp">
 
-        <ListView
-            android:id="@+id/cars_list"
-            android:layout_width="0dp"
-            android:layout_height="281dp"
-            android:layout_below="@+id/imageView19"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lbTitle"
-            app:layout_constraintVertical_bias="1.0" />
-
         <ImageView
             android:id="@+id/imgHeader"
             android:layout_width="wrap_content"
@@ -188,6 +174,14 @@
             android:layout_marginTop="3dp"
             android:layout_toEndOf="@+id/textView6"
             android:rating="3" />
+
+        <ListView
+            android:id="@+id/cars_list"
+            android:layout_width="333dp"
+            android:layout_height="197dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/imageView19"
+            android:layout_marginEnd="25dp" />
 
     </RelativeLayout>
 
