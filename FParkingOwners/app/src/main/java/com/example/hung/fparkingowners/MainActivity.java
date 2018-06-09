@@ -64,6 +64,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+<<<<<<< HEAD
     public String ownerPhoneNumber,totalSpace;
     ListView lv;
     BookingDTO bookingDTO;
@@ -73,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
     String wantPermission = android.Manifest.permission.READ_PHONE_STATE;
     private static final int PERMISSION_REQUEST_CODE = 1;
 
+=======
+>>>>>>> 7b8edc79e7efdfb5adfffd69a2f11e91238650e8
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -230,4 +233,5 @@ public class MainActivity extends AppCompatActivity {
 //            new ManagerBookingTask("get", getApplicationContext(), getWindow().getDecorView().getRootView(), parkingID, MainActivity.this, lv, null);
         }
     }
+
 }

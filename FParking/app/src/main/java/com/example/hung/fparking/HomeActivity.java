@@ -19,12 +19,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import Model.GPSTracker;
+
 public class HomeActivity extends FragmentActivity implements OnMapReadyCallback, PlaceSelectionListener {
 
     private GoogleMap mMap;
     int check = 0;
     double searchPlaceLat = 0;
     double getSearchPlaceLng = 0;
+    double myLocationLat = 0;
+    double myLocationLng = 0;
+    double selectPlaceLat = 0;
+    double selectPlaceLng = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +40,6 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
         searchPlace();
     }
 
@@ -47,6 +52,9 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         mMap.setMyLocationEnabled(true);
+
+        GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), 15));
 
     }
 
