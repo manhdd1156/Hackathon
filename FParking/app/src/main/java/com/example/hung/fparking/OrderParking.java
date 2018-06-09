@@ -3,6 +3,7 @@ package com.example.hung.fparking;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -61,17 +62,42 @@ public class OrderParking extends AppCompatActivity {
         textViewTime = findViewById(R.id.textViewTime);
         buttonDat_Cho = findViewById(R.id.buttonDat_Cho_Ngay);
 
+        sharedPreferences = getSharedPreferences("driver", 0);
+        sharedPreferenceEditor = sharedPreferences.edit();
 
         buttonDat_Cho.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sharedPreferences = getSharedPreferences("driver", 0);
-                sharedPreferenceEditor = sharedPreferences.edit();
-                sharedPreferenceEditor.putString("parkingLat", parkingLatitde + "");
-                sharedPreferenceEditor.putString("parkingLng", parkinglongitude + "");
-                sharedPreferenceEditor.commit();
+                String bookID = sharedPreferences.getString("bookingID","");
+                if (bookID.equals("")) {
+                    sharedPreferenceEditor.putString("parkingLat", parkingLatitde + "");
+                    sharedPreferenceEditor.putString("parkingLng", parkinglongitude + "");
+                    sharedPreferenceEditor.commit();
 
-                new pushToOwner("2","order").execute((Void)null);
+                    new pushToOwner("2", "order").execute((Void) null);
+                }else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(OrderParking.this);
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int choice) {
+                            switch (choice) {
+                                case DialogInterface.BUTTON_POSITIVE:
+
+
+                                    break;
+                                case DialogInterface.BUTTON_NEGATIVE:
+
+                                    break;
+                            }
+                        }
+                    };
+                    try {
+                        builder.setMessage("Bạn đang đặt chỗ tại bãi xe: ")
+                                .setPositiveButton("Có", dialogClickListener).setCancelable(false).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
 
@@ -154,7 +180,8 @@ public class OrderParking extends AppCompatActivity {
     class pushToOwner extends AsyncTask<Void, Void, Boolean> {
         ProgressDialog pdLoading;
         boolean success = false;
-        String action,carID;
+        String action, carID;
+
         public pushToOwner(String carID, String action) {
             this.action = action;
             this.carID = carID;
@@ -195,10 +222,10 @@ public class OrderParking extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            if(aBoolean==null) {
+            if (aBoolean == null) {
                 pdLoading.dismiss();
                 onResume();
-            }else {
+            } else {
                 pdLoading.dismiss();
             }
         }

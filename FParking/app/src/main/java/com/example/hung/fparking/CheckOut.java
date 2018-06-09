@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import Model.GPSTracker;
 import Service.Constants;
 import Service.HttpHandler;
 
@@ -71,7 +72,13 @@ public class CheckOut extends AppCompatActivity {
                     new pushToOwner("2", "checkout", bookingID).execute((Void) null);
                 } else {
                     sharedPreferenceEditor.clear().commit();
+                    GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
+
+                    double[] myLocation = new double[2];
+                    myLocation[0] = gpsTracker.getLatitude();
+                    myLocation[1] = gpsTracker.getLongitude();
                     Intent intent = new Intent(CheckOut.this, HomeActivity.class);
+                    intent.putExtra("myLocation", myLocation);
                     startActivity(intent);
                 }
             }

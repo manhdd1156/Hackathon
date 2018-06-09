@@ -95,10 +95,8 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         buttonCheckin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                    locationManager.removeUpdates(Direction.this);
                     new pushToOwner("2", "checkin", sharedPreferences.getString("bookingID", "")).execute((Void) null);
-
-
 
             }
         });
