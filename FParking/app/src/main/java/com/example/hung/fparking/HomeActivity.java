@@ -2,11 +2,15 @@ package com.example.hung.fparking;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -39,7 +43,7 @@ import Entity.GetNearPlace;
 import Model.GPSTracker;
 import Service.HttpHandler;
 
-public class HomeActivity extends FragmentActivity implements OnMapReadyCallback, PlaceSelectionListener {
+public class HomeActivity extends FragmentActivity implements OnMapReadyCallback, PlaceSelectionListener, GoogleMap.OnCameraMoveStartedListener, LocationListener {
 
     private GoogleMap mMap;
     int check = 0;
@@ -54,6 +58,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor sharedPreferencesEditor;
     View mMapView;
+    private LocationManager locationManager = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +82,9 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         rlp.setMargins(0, 1500, 0, 0);
 
         new GetNearPlace().execute();
+
+        // Goi Listener thay doi vi tri
+        callLocationChangedListener();
 
     }
 
@@ -109,6 +117,9 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 return false;
             }
         });
+
+        // Gọi Listener của movecamera
+        mMap.setOnCameraMoveStartedListener(this);
     }
 
     public void searchPlace() {
@@ -153,6 +164,55 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onError(Status status) {
+
+    }
+
+    @Override
+    public void onCameraMoveStarted(int i) {
+
+//        LatLng cameraLatLng = ;
+//        String[] locaton = getLat_lng(cameraLatLng.toString());
+
+        selectPlaceLat = mMap.getCameraPosition().target.latitude;
+        Log.e("Camera LatLog", searchPlaceLat + "");
+        check = 1;
+//        selectPlaceLat = Double.parseDouble(locaton[0]);
+//        selectPlaceLng = Double.parseDouble(locaton[1]);
+        new GetNearPlace().execute();
+
+    }
+
+    private void callLocationChangedListener() {
+        try {
+            locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        check = 1;
+        selectPlaceLng = location.getLatitude();
+        searchPlaceLng = location.getLatitude();
+        Log.e("Location change: ", location.getLatitude() + "");
+
+        new GetNearPlace().execute();
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
 
     }
 
