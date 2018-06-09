@@ -22,7 +22,7 @@ public class LoadFirstTime extends AppCompatActivity {
         getSupportActionBar().hide();
 
         sharedPreferences = getSharedPreferences("dirver", 0);
-        int parkingID = 1;
+        int parkingID = 0;
         sharedPreferencesEditor = sharedPreferences.edit();
         sharedPreferencesEditor.putInt("parkingID", parkingID);
         sharedPreferencesEditor.commit();

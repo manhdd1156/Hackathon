@@ -95,7 +95,7 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         // position on right bottom
         rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
         rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
-        rlp.setMargins(0, 1000, 0, 0);
+        rlp.setMargins(0, 1500, 0, 0);
 
         // Gọi Listener Changed Location
         callLocationChangedListener();
@@ -129,15 +129,14 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         GPSTracker gps = new GPSTracker(this);
         String directionLat = sharedPreferences.getString("parkingLat", "");
         String directionLng = sharedPreferences.getString("parkingLng", "");
-<<<<<<< HEAD
-        Log.e("TOA DO DIEM DEN: ",directionLat+"---"+directionLng);
 
-=======
+        Log.e("TOA DO DIEM DEN: ", directionLat + "---" + directionLng);
 //        Log.e("directionLat in Dirction", "" + directionLat);
 >>>>>>> 88305cfe7332a2cbba71907b6bd57f8e5ef76d0c
         String ori = directionLat + "," + directionLng;
         try {
             new DirectionFinder(this, gps.getLatitude() + "," + gps.getLongitude(), directionLat+","+directionLng).execute();
+            new DirectionFinder(this, gps.getLatitude() + "," + gps.getLongitude(), directionLat + "," + directionLng).execute();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -251,7 +250,7 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         if (!userGesture) {
             cameraPosition = new CameraPosition.Builder()
                     .target(new LatLng(location.getLatitude(), location.getLongitude()))             // Sets the center of the map to current location
-                    .zoom(15)                   // Sets the zoom
+                    .zoom(18)                   // Sets the zoom
                     .bearing(location.getBearing()) // Sets the orientation of the camera to east
                     .tilt(0)                   // Sets the tilt of the camera to 0 degrees
                     .build();                   // Creates a CameraPosition from the builder

@@ -12,6 +12,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
@@ -51,6 +53,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     ArrayList<Entity.GetNearPlace> nearParkingList;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor sharedPreferencesEditor;
+    View mMapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,15 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
         sharedPreferences = getSharedPreferences("dirver", 0);
         searchPlace();
+
+
+        mMapView = mapFragment.getView();
+        View locationButton = ((View) mMapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+        // position on right bottom
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
+        rlp.setMargins(0, 1500, 0, 0);
 
         new GetNearPlace().execute();
 
