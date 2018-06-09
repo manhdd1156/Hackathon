@@ -99,7 +99,7 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/cars_list"
+            android:layout_alignStart="@+id/cars_list2"
             android:layout_below="@+id/imageView15"
             android:layout_marginLeft="9dp"
             android:text="Bãi đỗ:"
@@ -189,7 +189,7 @@
             android:rating="3" />
 
         <ListView
-            android:id="@+id/cars_list"
+            android:id="@+id/cars_list2"
             android:layout_width="300dp"
             android:layout_height="318dp"
             android:layout_below="@+id/imageView19"
