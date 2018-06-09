@@ -9,7 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="49dp"
         android:layout_centerHorizontal="true"
-        tools:layout_editor_absoluteX="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="0dp">
 
         <TextView
