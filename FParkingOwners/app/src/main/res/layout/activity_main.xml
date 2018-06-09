@@ -155,11 +155,11 @@
 
         <Button
             android:id="@+id/btnChange"
-            android:layout_width="54dp"
-            android:layout_height="23dp"
+            android:layout_width="59dp"
+            android:layout_height="30dp"
             android:layout_below="@+id/textView3"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="4dp"
             android:layout_toEndOf="@+id/tvSpace"
             android:background="@drawable/button_selector"
             android:text="THAY ĐỔI"
@@ -168,9 +168,10 @@
 
         <Button
             android:id="@+id/btnThongke"
-            android:layout_width="54dp"
-            android:layout_height="23dp"
+            android:layout_width="57dp"
+            android:layout_height="31dp"
             android:layout_alignTop="@+id/textView4"
+            android:layout_marginTop="-5dp"
             android:layout_toEndOf="@+id/tvAddress"
             android:background="@drawable/button_selector"
             android:text="THỐNG KÊ"
