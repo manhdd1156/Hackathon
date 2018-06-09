@@ -80,5 +80,6 @@ public class CheckOut extends AppCompatActivity {
             textViewTime.setText(time);
             textViewAddress.setText(address);
         }
+
     }
 }

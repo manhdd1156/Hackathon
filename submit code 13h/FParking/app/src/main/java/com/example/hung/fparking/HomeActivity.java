@@ -1,9 +1,7 @@
 package com.example.hung.fparking;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -49,8 +47,6 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     double selectPlaceLng = 0;
     String strJSON = null;
     ArrayList<Entity.GetNearPlace> nearParkingList;
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor sharedPreferencesEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +57,6 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        sharedPreferences = getSharedPreferences("dirver", 0);
         searchPlace();
 
         new GetNearPlace().execute();
@@ -83,16 +78,10 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-
-                if (sharedPreferences.getInt("parkingID", 0) != 0) {
-                    String parkingLocation = marker.getPosition().toString();
-                    Intent intentOrderFlagment = new Intent(HomeActivity.this, OrderParking.class);
-                    intentOrderFlagment.putExtra("ParkingLocation", parkingLocation);
-                    startActivity(intentOrderFlagment);
-                } else {
-                    AlertDialog.Builder builderCaution = new AlertDialog.Builder(HomeActivity.this);
-                    builderCaution.setMessage("Bạn đang đỗ xe nơi khác. Vui lòng thanh toán trước khi đặt bãi đỗ xe mới").show();
-                }
+                String parkingLocation = marker.getPosition().toString();
+                Intent intentOrderFlagment = new Intent(HomeActivity.this, OrderParking.class);
+                intentOrderFlagment.putExtra("ParkingLocation", parkingLocation);
+                startActivity(intentOrderFlagment);
                 return false;
             }
         });
