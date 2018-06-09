@@ -7,11 +7,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="82dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -20,7 +17,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="37dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="26dp"
             android:layout_marginTop="5dp"
             android:drawableLeft="@drawable/ic_action_license_plate"
             android:gravity="center_vertical"
@@ -30,33 +28,39 @@
             tools:layout_editor_absoluteY="16dp" />
 
         <TextView
-            android:id="@+id/textView8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignStart="@+id/tvBienso"
-            android:text="Được đánh giá:"
-            android:textSize="15sp" />
-
-        <TextView
             android:id="@+id/tvmoney"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="50dp"
+            android:layout_marginTop="5dp"
             android:drawableLeft="@drawable/ic_action_money"
             android:gravity="center_vertical"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="63dp"
-            android:layout_marginTop="5dp"
             android:text="TextView"
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/textView10"
+            android:id="@+id/tvCheckin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/tvBienso"
+            android:layout_below="@+id/tvBienso"
+            android:drawableLeft="@drawable/ic_action_checkin"
+            android:gravity="center_vertical"
+            android:text="TextView"
+            android:textSize="15sp"
+            tools:layout_editor_absoluteX="25dp"
+            tools:layout_editor_absoluteY="63dp" />
+
+        <TextView
+            android:id="@+id/tvCheckout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignStart="@+id/tvmoney"
-            android:text="Tốt"
+            android:layout_below="@+id/tvBienso"
+            android:drawableLeft="@drawable/ic_action_checkout"
+            android:gravity="center_vertical"
+            android:text="TextView"
             android:textSize="15sp" />
 
     </RelativeLayout>

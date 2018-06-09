@@ -39,39 +39,21 @@
         android:scaleType="fitXY"
         app:srcCompat="@drawable/checkoutinfo" />
 
-    <TextView
-        android:id="@+id/txtFromDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/imgInfor1"
-        android:layout_marginTop="25dp"
-        android:layout_toEndOf="@+id/textView2"
-        android:text="TextView"
-        android:textSize="15sp" />
-
-    <ImageView
-        android:id="@+id/imageView15"
-        android:layout_width="330dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtFromDate"
-        android:layout_centerHorizontal="true"
-        app:srcCompat="@drawable/line_orange" />
-
     <ImageView
         android:id="@+id/imageView15"
         android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="97dp"
+        android:layout_marginBottom="138dp"
         app:srcCompat="@drawable/line_orange" />
 
     <TextView
-        android:id="@+id/textView11"
+        android:id="@+id/txtFromDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/imageView15"
-        android:layout_alignTop="@+id/txtFromDate"
+        android:layout_above="@+id/imageView15"
+        android:layout_alignStart="@+id/cars_list2"
         android:text="Từ ngày"
         android:textSize="15sp" />
 
@@ -86,52 +68,22 @@
         tools:layout_editor_absoluteX="42dp"
         tools:layout_editor_absoluteY="291dp" />
 
-    <ImageView
-        android:id="@+id/imgFromDate"
-        android:layout_width="37dp"
-        android:layout_height="38dp"
-        android:layout_alignEnd="@+id/imageView15"
-        android:layout_below="@+id/imgInfor1"
-        android:layout_marginTop="13dp"
-        android:scaleType="fitXY"
-        app:srcCompat="@drawable/ic_action_calendar" />
-
-    <ImageView
-        android:id="@+id/imgToDate"
-        android:layout_width="37dp"
-        android:layout_height="38dp"
-        android:layout_alignBottom="@+id/imageView15"
-        android:layout_alignEnd="@+id/imageView15"
-        android:layout_marginBottom="10dp"
-        android:scaleType="fitXY"
-        app:srcCompat="@drawable/ic_action_calendar" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/imageView15"
-        android:layout_alignStart="@+id/imageView15"
-        android:text="Đến ngày"
-        android:textSize="15sp" />
-
-    <TextView
-        android:id="@+id/txtToDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/imageView15"
-        android:layout_alignStart="@+id/txtFromDate"
-        android:text="TextView"
-        android:textSize="15sp" />
-
     <Button
         android:id="@+id/button"
         android:layout_width="182dp"
         android:layout_height="42dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="29dp"
+        android:layout_marginBottom="49dp"
         android:background="@drawable/button_selector"
         android:text="THỐNG KÊ"
         android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/txtToDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/imageView15"
+        android:layout_alignEnd="@+id/cars_list2"
+        android:text="Đến ngày" />
 </RelativeLayout>
