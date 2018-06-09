@@ -88,7 +88,6 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         sharedPreferences = getSharedPreferences("driver", 0);
         sharedPreferenceEditor = sharedPreferences.edit();
         String bookID = sharedPreferences.getString("bookingID", "");
-        String action = sharedPreferences.getString("action", "");
 
         buttonCheckin = (Button) findViewById(R.id.buttonCheckin);
 
@@ -268,6 +267,9 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
     @Override
     public void onLocationChanged(Location location) {
 //        Log.e("Direction class onLocationChanged: ", "location changed");
+        if(sharedPreferences.getString("action", "").equals("2")){
+            locationManager.removeUpdates(Direction.this);
+        }
         if (!userGesture) {
             cameraPosition = new CameraPosition.Builder()
                     .target(new LatLng(location.getLatitude(), location.getLongitude()))             // Sets the center of the map to current location

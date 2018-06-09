@@ -104,18 +104,18 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             public boolean onMarkerClick(Marker marker) {
                 String parkingLocation = marker.getPosition().toString();
                 String[] latlng = getLat_lng(parkingLocation);
-                String lat =latlng[0];
-                String lng =latlng[1];
+                String lat = latlng[0];
+                String lng = latlng[1];
                 if (sharedPreferences.getString("bookingID", "").equals("")) {
                     Intent intentOrderFlagment = new Intent(HomeActivity.this, OrderParking.class);
                     intentOrderFlagment.putExtra("ParkingLocation", parkingLocation);
                     startActivity(intentOrderFlagment);
-                } else if (sharedPreferences.getString("parkingLat", "").equals(lat)&&sharedPreferences.getString("parkingLng", "").equals(lng)) {
-                    if (sharedPreferences.getString("action","").equals("2")){
+                } else if (sharedPreferences.getString("parkingLat", "").equals(lat) && sharedPreferences.getString("parkingLng", "").equals(lng)) {
+                    if (sharedPreferences.getString("action", "").equals("2")) {
                         Intent intentOrderFlagment = new Intent(HomeActivity.this, CheckOut.class);
                         intentOrderFlagment.putExtra("ParkingLocation", parkingLocation);
                         startActivity(intentOrderFlagment);
-                    }else {
+                    } else {
                         Intent intentOrderFlagment = new Intent(HomeActivity.this, OrderParking.class);
                         intentOrderFlagment.putExtra("ParkingLocation", parkingLocation);
                         startActivity(intentOrderFlagment);
@@ -138,7 +138,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                     };
                     try {
-                        builder.setMessage("Bạn đang đặt chỗ tại bãi xe: ")
+                        builder.setMessage("Bạn đang đỗ xe tại đây ")
                                 .setPositiveButton("Có", dialogClickListener).setCancelable(false).show();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -315,17 +315,26 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            int height = 75;
-            int width = 75;
+            int height = 90;
+            int width = 90;
             BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.parking_icon);
             Bitmap b = bitmapdraw.getBitmap();
             Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+
+            BitmapDrawable bitmapPark = (BitmapDrawable) getResources().getDrawable(R.drawable.parking_icon_green);
+            Bitmap p = bitmapPark.getBitmap();
+            Bitmap parkMarker = Bitmap.createScaledBitmap(p, width, height, false);
             super.onPreExecute();
             if (nearParkingList.size() > 0) {
                 for (int i = 0; i < nearParkingList.size(); i++) {
                     LatLng latLng = new LatLng(nearParkingList.get(i).getLattitude(), nearParkingList.get(i).getLongitude());
-                    mMap.addMarker(new MarkerOptions()
-                            .position(latLng).icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
+                    if (sharedPreferences.getString("parkingLat", "").equals(nearParkingList.get(i).getLattitude()+"") && sharedPreferences.getString("parkingLng", "").equals(nearParkingList.get(i).getLongitude()+"")) {
+                        mMap.addMarker(new MarkerOptions()
+                                .position(latLng).icon(BitmapDescriptorFactory.fromBitmap(parkMarker)));
+                    }else {
+                        mMap.addMarker(new MarkerOptions()
+                                .position(latLng).icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
+                    }
                 }
             }
         }
