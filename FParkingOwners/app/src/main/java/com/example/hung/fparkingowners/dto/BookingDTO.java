@@ -10,12 +10,13 @@ public class BookingDTO {
     private String licensePlate;
     private String typeCar;
     private double price;
+    private double payment;
 
     public BookingDTO() {
 
     }
 
-    public BookingDTO(int bookingID, int parkingID, int carID, String status, String checkinTime, String checkoutTime, String licensePlate, String typeCar, double price) {
+    public BookingDTO(int bookingID, int parkingID, int carID, String status, String checkinTime, String checkoutTime, String licensePlate, String typeCar, double price,double payment) {
         this.bookingID = bookingID;
         this.parkingID = parkingID;
         this.carID = carID;
@@ -25,6 +26,15 @@ public class BookingDTO {
         this.licensePlate = licensePlate;
         this.typeCar = typeCar;
         this.price = price;
+        this.payment = payment;
+    }
+
+    public double getPayment() {
+        return payment;
+    }
+
+    public void setPayment(double payment) {
+        this.payment = payment;
     }
 
     public int getBookingID() {
