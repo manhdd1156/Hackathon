@@ -29,6 +29,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="50dp"
+            android:layout_marginLeft="5dp"
             android:background="@drawable/button_selector"
             android:text="HỦY ĐẶT CHỖ"
             android:textColor="#FFFFFF"
@@ -38,7 +39,7 @@
             android:id="@+id/tvDistance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="110dp"
+            android:layout_marginLeft="50dp"
             android:drawableLeft="@drawable/ic_action_distance"
             android:gravity="center_vertical"
             android:text="0 km" />

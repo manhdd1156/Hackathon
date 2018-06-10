@@ -56,11 +56,13 @@ public class CheckOut extends AppCompatActivity {
         buttonCheckOut = findViewById(R.id.buttonCheckout);
 
         final String bookingID = sharedPreferences.getString("bookingID", "");
+        final String parkingID = sharedPreferences.getString("parkingID", "");
 
         if (sharedPreferences.getString("action", "").equals("3")) {
             buttonCheckOut.setText("THANH TOÁN XONG");
             new GetCheckOutInfor(bookingID).execute();
             textViewTotalPrice.setText(sharedPreferences.getString("totalPrice", ""));
+            textViewCheckIn.setText(textViewCheckIn.getText() + " - " + sharedPreferences.getString("checkoutTime", ""));
         } else {
             buttonCheckOut.setText("THANH TOÁN");
         }
@@ -69,7 +71,7 @@ public class CheckOut extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (buttonCheckOut.getText().equals("THANH TOÁN")) {
-                    new pushToOwner("2", "checkout", bookingID).execute((Void) null);
+                    new pushToOwner("2", "checkout", bookingID,parkingID).execute((Void) null);
                 } else {
                     sharedPreferenceEditor.clear().commit();
                     GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
@@ -156,12 +158,13 @@ public class CheckOut extends AppCompatActivity {
     class pushToOwner extends AsyncTask<Void, Void, Boolean> {
         ProgressDialog pdLoading;
         boolean success = false;
-        String action, carID, bookingID;
+        String action, carID, bookingID, parkingID;
 
-        public pushToOwner(String carID, String action, String bookingID) {
+        public pushToOwner(String carID, String action, String bookingID,String parkingID) {
             this.action = action;
             this.carID = carID;
             this.bookingID = bookingID;
+            this.parkingID = parkingID;
             pdLoading = new ProgressDialog(CheckOut.this);
         }
 
@@ -185,6 +188,7 @@ public class CheckOut extends AppCompatActivity {
                 formData.put("carID", carID);
                 formData.put("bookingID", bookingID);
                 formData.put("action", action);
+                formData.put("parkingID", parkingID);
                 String json = httpHandler.post(Constants.API_URL + "driver/booking.php", formData.toString());
                 JSONObject jsonObj = new JSONObject(json);
                 if (jsonObj.getInt("size") > 0) {

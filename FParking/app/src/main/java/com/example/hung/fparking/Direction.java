@@ -1,12 +1,14 @@
 package com.example.hung.fparking;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -19,6 +21,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -72,6 +75,8 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
     Button buttonCheckin, buttonHuy;
     View mMapView;
     private boolean userGesture = false;
+    ProgressDialog proD;
+    AlertDialog.Builder builder;
 
     CameraPosition cameraPosition;
 
@@ -87,7 +92,10 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
 
         sharedPreferences = getSharedPreferences("driver", 0);
         sharedPreferenceEditor = sharedPreferences.edit();
-        String bookID = sharedPreferences.getString("bookingID", "");
+        final String parkingID = sharedPreferences.getString("parkingID", "");
+
+//        proD = new ProgressDialog(OrderParking.this);
+//        builder = new AlertDialog.Builder(OrderParking.this);
 
         buttonCheckin = (Button) findViewById(R.id.buttonCheckin);
         buttonHuy = (Button) findViewById(R.id.buttonHuy);
@@ -96,7 +104,7 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
             @Override
             public void onClick(View view) {
                 locationManager.removeUpdates(Direction.this);
-                new pushToOwner("2", "checkin", sharedPreferences.getString("bookingID", "")).execute((Void) null);
+                new pushToOwner("2", "checkin", sharedPreferences.getString("bookingID", ""), parkingID).execute((Void) null);
 
             }
         });
@@ -104,8 +112,71 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         buttonHuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                locationManager.removeUpdates(Direction.this);
-                new pushToOwner("2", "cancel", sharedPreferences.getString("bookingID", "")).execute((Void) null);
+
+//                new CountDownTimer(15000, 1000) {
+////                    boolean checkOwer = true;
+////
+////                    public void onTick(long millisUntilFinished) {
+////                        proD.setMessage("\tĐang đợi chủ xe xác nhận ... " + millisUntilFinished / 1000);
+////                    }
+////
+////                    public void onFinish() {
+////                        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+////                            @Override
+////                            public void onClick(DialogInterface dialog, int choice) {
+////                                switch (choice) {
+////                                    case DialogInterface.BUTTON_POSITIVE:
+////
+////                                        break;
+////                                    case DialogInterface.BUTTON_NEGATIVE:
+////
+////                                        break;
+////                                }
+////                            }
+////                        };
+////                        try {
+////                            proD.dismiss();
+////                            builder.setMessage("Chủ bãi đỗ đang bận!")
+////                                    .setPositiveButton("Chấp Nhận", dialogClickListener).setCancelable(false).show();
+////                        } catch (Exception e) {
+////                            e.printStackTrace();
+////                        }
+////                    }
+////                }.start();
+////
+////                locationManager.removeUpdates(Direction.this);
+////                new pushToOwner("2", "cancel", sharedPreferences.getString("bookingID", "")).execute((Void) null);
+                AlertDialog.Builder builder = new AlertDialog.Builder(Direction.this);
+                builder.setMessage("Hủy chỗ bạn sẽ bị phạt 5000 đồng vào lần gửi xe tới! Bạn chắc chắn hủy");
+                builder.setCancelable(true);
+                builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        new pushToOwner("2", "cancel", sharedPreferences.getString("bookingID", ""), parkingID).execute((Void) null);
+                        GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
+
+                        Intent intentBackHome = new Intent(Direction.this, HomeActivity.class);
+                        double[] myLocation = new double[2];
+                        myLocation[0] = gpsTracker.getLatitude();
+                        myLocation[1] = gpsTracker.getLongitude();
+                        sharedPreferenceEditor.putString("locationLT", gpsTracker.getLatitude() + "");
+                        sharedPreferenceEditor.putString("locationLN", gpsTracker.getLongitude() + "");
+                        sharedPreferenceEditor.commit();
+                        locationManager.removeUpdates(Direction.this);
+//                        intentBackHome.putExtra("myLocation",myLocation);
+                        startActivity(intentBackHome);
+                    }
+                });
+
+                builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "Không hủy nhé", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                builder.show();
             }
         });
 
@@ -182,10 +253,8 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        GPSTracker gps = new GPSTracker(this);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gps.getLatitude(), gps.getLongitude()), 18));
 //        mMap.getUiSettings().setZoomControlsEnabled(true);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -205,9 +274,6 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
                 return false;
             }
         });
-        GPSTracker gps = new GPSTracker(this);
-        Location mLocation = gps.getLocation();
-        mMap.addMarker(new MarkerOptions().position(new LatLng(mLocation.getLatitude(), mLocation.getLongitude())).title("Marker in Sydney"));
 
         // Gọi listener OnCameraMoveStartedListener
         mMap.setOnCameraMoveStartedListener(this);
@@ -275,7 +341,7 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
     @Override
     public void onLocationChanged(Location location) {
 //        Log.e("Direction class onLocationChanged: ", "location changed");
-        if(sharedPreferences.getString("action", "").equals("2")){
+        if (sharedPreferences.getString("action", "").equals("2")) {
             locationManager.removeUpdates(Direction.this);
         }
         if (!userGesture) {
@@ -289,14 +355,18 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         }
 
         Location distination = new Location("distination");
+        try {
+            distination.setLatitude(Double.parseDouble(sharedPreferences.getString("parkingLat", "")));
+            distination.setLongitude(Double.parseDouble(sharedPreferences.getString("parkingLng", "")));
+            double distanceValue = distination.distanceTo(location);
+            if (distanceValue <= 40) {
 
-        distination.setLatitude(Double.parseDouble(sharedPreferences.getString("parkingLat", "")));
-        distination.setLongitude(Double.parseDouble(sharedPreferences.getString("parkingLng", "")));
-        double distanceValue = distination.distanceTo(location);
-        if (distanceValue <= 40) {
-
-            createNotification("Fparking");
+                createNotification("Fparking");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     public void createNotification(String title) {
@@ -381,25 +451,19 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
     }
 
     class pushToOwner extends AsyncTask<Void, Void, Boolean> {
-        ProgressDialog pdLoading;
         boolean success = false;
-        String action, carID, bookingID;
+        String action, carID, bookingID, parkingID;
 
-        public pushToOwner(String carID, String action, String bookingID) {
+        public pushToOwner(String carID, String action, String bookingID, String parkingID) {
             this.action = action;
             this.carID = carID;
             this.bookingID = bookingID;
-            pdLoading = new ProgressDialog(Direction.this);
+            this.parkingID = parkingID;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
-            //this method will be running on UI thread
-            pdLoading.setMessage("\tĐợi xíu...");
-            pdLoading.setCancelable(false);
-            pdLoading.show();
 
         }
 
@@ -412,6 +476,7 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
                 formData.put("carID", carID);
                 formData.put("bookingID", bookingID);
                 formData.put("action", action);
+                formData.put("parkingID", parkingID);
                 String json = httpHandler.post(Constants.API_URL + "driver/booking.php", formData.toString());
                 JSONObject jsonObj = new JSONObject(json);
                 if (jsonObj.getInt("size") > 0) {
@@ -428,10 +493,8 @@ public class Direction extends FragmentActivity implements OnMapReadyCallback, D
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
             if (aBoolean == null) {
-                pdLoading.dismiss();
                 onResume();
             } else {
-                pdLoading.dismiss();
             }
         }
 

@@ -34,7 +34,8 @@ public class LoadFirstTime extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("driver", 0);
 //        int parkingID = 0;
         sharedPreferencesEditor = sharedPreferences.edit();
-//        sharedPreferencesEditor.clear().commit();
+//        sharedPreferencesEditor.putString("bookingID","");
+        sharedPreferencesEditor.clear().commit();
         Log.e("Cái này chạy kinh qua","aaaaaaaaaa");
 //        sharedPreferencesEditor.putInt("parkingID", parkingID);
         sharedPreferencesEditor.commit();
@@ -44,7 +45,7 @@ public class LoadFirstTime extends AppCompatActivity {
 //        myLocation[0] = gpsTracker.getLatitude();
 //        myLocation[1] = gpsTracker.getLongitude();
 //
-//        Intent homeIntent = new Intent(LoadFirstTime.this, HomeActivity.class);
+//        Intent homeIntent = new Intent(LoadFirstTime.this, HomeActivity.class);./
 //        homeIntent.putExtra("myLocation", myLocation);
 //        startActivity(homeIntent);
         // pusher

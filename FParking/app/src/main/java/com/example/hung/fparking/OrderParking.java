@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import Service.Constants;
 import Service.HttpHandler;
 
-public class OrderParking extends AppCompatActivity {
+  public class OrderParking extends AppCompatActivity {
     boolean check = true;
     double selectPlaceLat = 0;
     double selectPlaceLng = 0;
@@ -47,6 +47,7 @@ public class OrderParking extends AppCompatActivity {
     String time = "N/A";
     double parkingLatitde = 0;
     double parkinglongitude = 0;
+    int parkingID=0;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor sharedPreferenceEditor;
 
@@ -84,6 +85,7 @@ public class OrderParking extends AppCompatActivity {
                 if (bookID.equals("")) {
                     sharedPreferenceEditor.putString("parkingLat", parkingLatitde + "");
                     sharedPreferenceEditor.putString("parkingLng", parkinglongitude + "");
+                    sharedPreferenceEditor.putString("parkingID", parkingID+"");
                     sharedPreferenceEditor.commit();
 
                     proD.setCancelable(false);
@@ -93,7 +95,7 @@ public class OrderParking extends AppCompatActivity {
                         boolean checkOwer = true;
 
                         public void onTick(long millisUntilFinished) {
-                            proD.setMessage("\tĐang đợi chủ xe xác nhận ... " + millisUntilFinished / 1000);
+                            proD.setMessage("\tĐang đợi chủ bãi đỗ xác nhận ... " + millisUntilFinished / 1000);
                             if (checkOwer) {
                                 new pushToOwner("2", "order").execute((Void) null);
                                 checkOwer = false;
@@ -194,6 +196,7 @@ public class OrderParking extends AppCompatActivity {
                     for (int i = 0; i < jsonArrayParking.length(); i++) {
                         JSONObject c = jsonArrayParking.getJSONObject(i);
 
+                        parkingID = c.getInt("parkingID");
                         address = c.getString("address");
                         currentSpace = c.getInt("currentSpace");
                         totalSlot = c.getInt("space");
@@ -220,7 +223,7 @@ public class OrderParking extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            textViewEmptySpace.setText(totalSlot - currentSpace + "");
+            textViewEmptySpace.setText(currentSpace + "");
             textViewSlots.setText("/" + totalSlot + "");
             textViewPrice.setText(price + "");
             textViewTime.setText(time);
@@ -261,6 +264,7 @@ public class OrderParking extends AppCompatActivity {
             try {
                 JSONObject formData = new JSONObject();
                 formData.put("carID", carID);
+                formData.put("parkingID",parkingID);
                 formData.put("action", action);
                 String json = httpHandler.post(Constants.API_URL + "driver/booking.php", formData.toString());
                 JSONObject jsonObj = new JSONObject(json);
@@ -277,10 +281,10 @@ public class OrderParking extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            if (aBoolean == null) {
-                onResume();
-            } else {
-            }
+//            if (aBoolean == null) {
+//                onResume();
+//            } else {
+//            }
         }
 
     }
@@ -327,10 +331,10 @@ public class OrderParking extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            if (aBoolean == null) {
-                onResume();
-            } else {
-            }
+//            if (aBoolean == null) {
+//                onResume();
+//            } else {
+//            }
         }
 
     }
@@ -338,6 +342,11 @@ public class OrderParking extends AppCompatActivity {
     @Override
     public void finish() {
         super.finish();
-        proD.dismiss();
+        try {
+            proD.dismiss();
+        }catch (Exception e){
+
+        }
+
     }
 }

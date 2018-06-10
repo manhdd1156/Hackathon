@@ -84,7 +84,9 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
         rlp.setMargins(0, 1500, 0, 0);
 
+        callLocationChangedListener();
         new GetNearPlace().execute();
+
 
     }
 
@@ -138,8 +140,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                     };
                     try {
-                        builder.setMessage("Bạn đang đỗ xe tại đây ")
-                                .setPositiveButton("Có", dialogClickListener).setCancelable(false).show();
+                        builder.setMessage("Bạn đang đỗ xe tại nơi khác!").show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -168,6 +169,12 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         // Gọi Listener của movecamera
         mMap.setOnCameraMoveStartedListener(this);
         callLocationChangedListener();
+
+        if (!sharedPreferences.getString("parkingLat", "").equals("") && !sharedPreferences.getString("parkingLng", "").equals("")) {
+            Double lt = Double.parseDouble(sharedPreferences.getString("parkingLat", ""));
+            Double ln = Double.parseDouble(sharedPreferences.getString("parkingLng", ""));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lt, ln), 15));
+        }
     }
 
     public void searchPlace() {
@@ -276,10 +283,17 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             HttpHandler httpHandler = new HttpHandler();
             if (check == 0) {
                 Intent intent = getIntent();
-                double[] locaton = intent.getDoubleArrayExtra("myLocation");
+                if (!sharedPreferences.getString("locationLT","").equals("")&&!sharedPreferences.getString("locationLN","").equals("")) {
+                    selectPlaceLat = Double.parseDouble(sharedPreferences.getString("locationLT",""));
+                    selectPlaceLng = Double.parseDouble(sharedPreferences.getString("locationLN",""));
+                    sharedPreferencesEditor.clear().commit();
+                }else {
+                    double[] locaton = intent.getDoubleArrayExtra("myLocation");
 
-                selectPlaceLat = locaton[0];
-                selectPlaceLng = locaton[1];
+                    selectPlaceLat = locaton[0];
+                    selectPlaceLng = locaton[1];
+
+                }
             } else {
                 selectPlaceLat = searchPlaceLat;
                 selectPlaceLng = searchPlaceLng;
@@ -311,8 +325,10 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 });
             }
+//            }
             return null;
         }
+
 
         @Override
         protected void onPostExecute(Void aVoid) {
@@ -347,14 +363,23 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+//            userAction = false;
+//        startActivity(getIntent());
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        startActivity(getIntent());
+    }
+
     public String[] getLat_lng(String location) {
         String[] latlng = location.substring(location.indexOf("(") + 1, location.indexOf(")")).split(",");
         return latlng;
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        userAction = false;
-    }
 }
+
+
